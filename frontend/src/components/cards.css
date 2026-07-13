@@ -1,0 +1,147 @@
+.test-card,
+.package-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.test-card::after,
+.package-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-hero);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.test-card:hover::after,
+.package-card:hover::after {
+  opacity: 1;
+}
+
+.test-card:hover,
+.package-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.card-icon {
+  font-size: 1.75rem;
+  opacity: 0.85;
+}
+
+.test-card h3,
+.package-card h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 0.35rem 0 0.5rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.card-badges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+  line-height: 1.5;
+}
+
+.card-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.meta-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  background: var(--bg);
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* Disease cards */
+.disease-card {
+  text-align: center;
+  cursor: pointer;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.disease-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+  background: linear-gradient(180deg, white, var(--primary-light));
+}
+
+.disease-icon {
+  font-size: 2.75rem;
+  display: block;
+  margin-bottom: 0.65rem;
+  transition: transform 0.3s;
+}
+
+.disease-card:hover .disease-icon {
+  transform: scale(1.1);
+}
+
+.disease-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.disease-card p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.disease-arrow {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.disease-card:hover .disease-arrow {
+  opacity: 1;
+}

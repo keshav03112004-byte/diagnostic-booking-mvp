@@ -1,0 +1,63 @@
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-video-overlay-main {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.72) 0%,
+    rgba(67, 56, 202, 0.55) 45%,
+    rgba(15, 23, 42, 0.82) 100%
+  );
+}
+
+.hero-video-overlay-side {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 23, 42, 0.5) 0%,
+    transparent 35%,
+    transparent 65%,
+    rgba(15, 23, 42, 0.45) 100%
+  );
+}
+
+.hero-video-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hero-video-glow-indigo {
+  width: 420px;
+  height: 420px;
+  top: 10%;
+  left: 15%;
+  background: #5B4FD9;
+}
+
+.hero-video-glow-coral {
+  width: 360px;
+  height: 360px;
+  bottom: 10%;
+  right: 12%;
+  background: #FF6B4A;
+}
