@@ -50,5 +50,6 @@ router.delete('/packages/:id', asyncHandler(adminPackageController.deletePackage
 router.get('/cms/settings', asyncHandler(cmsController.getAllSettings));
 router.put('/cms/hero', asyncHandler(cmsController.updateHero));
 router.post('/cms/upload', uploadMedia, asyncHandler(handleUpload));
+router.post('/cms/generate-video', asyncHandler(cmsController.generateVideo));
 
 module.exports = router;

@@ -8,20 +8,19 @@ const statSchema = new mongoose.Schema(
 const siteSettingsSchema = new mongoose.Schema(
   {
     key: { type: String, unique: true, default: 'main' },
-    siteName: { type: String, default: 'DiagBook' },
-    badge: { type: String, default: 'Trusted · At-Home · NABL Labs' },
-    tagline: { type: String, default: 'Your Health Deserves' },
-    taglineHighlight: { type: String, default: 'Care at Your Doorstep' },
+    siteName: { type: String, default: 'energex.life' },
+    badge: { type: String, default: 'Accredited · At-Home Collection · Expert Analysis' },
+    tagline: { type: String, default: 'Precision Health & Wellness with' },
+    taglineHighlight: { type: String, default: 'Advanced Diagnostics at Home' },
     description: {
       type: String,
       default:
-        'Book diagnostic tests in 2 minutes. Free home sample collection from NABL-accredited labs. Smart reports delivered within 24 hours.',
+        'Book diagnostic tests and full body scans in under 2 minutes. Certified home sample collection from premium accredited labs. Advanced smart reports in 24 hours.',
     },
     heroVideo: {
       src: {
         type: String,
-        default:
-          'https://videos.pexels.com/video-files/7578612/7578612-hd_1920_1080_25fps.mp4',
+        default: '/videos/hero-health.mp4',
       },
       poster: {
         type: String,
@@ -30,7 +29,7 @@ const siteSettingsSchema = new mongoose.Schema(
       },
       caption: {
         type: String,
-        default: 'Home diagnostic sample collection — book online, get reports in 24 hours',
+        default: 'Clinical diagnostic laboratory analysis — book online, get reports in 24 hours',
       },
     },
     heroStats: {

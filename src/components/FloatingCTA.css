@@ -1,0 +1,31 @@
+.floating-cta {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  align-items: flex-end;
+}
+
+.floating-cta .floating-btn {
+  box-shadow: 0 10px 28px rgba(var(--secondary-rgb), 0.22);
+}
+
+.floating-cta .btn-secondary-light {
+  background: rgba(var(--secondary-rgb), 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.floating-cta .btn-secondary-light:hover {
+  background: rgba(var(--secondary-rgb), 0.92);
+}
+
+@media (max-width: 768px) {
+  .floating-cta {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}

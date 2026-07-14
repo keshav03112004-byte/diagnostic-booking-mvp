@@ -1,0 +1,15 @@
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  height: var(--logo-height, 52px);
+  line-height: 0;
+}
+
+.brand-logo-image {
+  display: block;
+  width: auto;
+  height: var(--logo-height, 52px);
+  max-width: min(240px, 46vw);
+  object-fit: contain;
+  object-position: left center;
+}

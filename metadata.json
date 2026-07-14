@@ -1,0 +1,6 @@
+{
+  "name": "Energex Life",
+  "description": "Premium at-home lab diagnostics & personalized wellness booking MVP under the energex.life brand.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

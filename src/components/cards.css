@@ -1,0 +1,292 @@
+.test-card,
+.package-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.test-card::after,
+.package-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-hero);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.test-card:hover::after,
+.package-card:hover::after {
+  opacity: 1;
+}
+
+.test-card:hover,
+.package-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.card-icon {
+  font-size: 1.75rem;
+  opacity: 0.85;
+}
+
+.test-card h3,
+.package-card h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 0.35rem 0 0.5rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.card-badges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+  line-height: 1.5;
+}
+
+.card-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.meta-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  background: var(--bg);
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* Disease cards */
+.disease-card {
+  text-align: center;
+  cursor: pointer;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.disease-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+  background: linear-gradient(180deg, white, var(--primary-light));
+}
+
+.disease-icon {
+  font-size: 2.75rem;
+  display: block;
+  margin-bottom: 0.65rem;
+  transition: transform 0.3s;
+}
+
+.disease-card:hover .disease-icon {
+  transform: scale(1.1);
+}
+
+.disease-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.disease-card p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.disease-arrow {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.disease-card:hover .disease-arrow {
+  opacity: 1;
+}
+
+/* ─── Popular / catalog test cards ─── */
+.screenshot-test-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 236px;
+  padding: 1.35rem 1.35rem 1.25rem;
+  background: #fff;
+  border: 1px solid #e8eef3;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.screenshot-test-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--primary-rgb), 0.28);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
+}
+
+.test-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+}
+
+.screenshot-test-card .category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.8rem;
+  border-radius: 9999px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.screenshot-test-card .blood-drop-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.screenshot-test-card:hover .blood-drop-circle {
+  transform: scale(1.08);
+}
+
+.test-card-body {
+  flex: 1;
+  margin-bottom: 1.1rem;
+}
+
+.test-card-title {
+  margin: 0 0 0.55rem;
+  color: var(--text);
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+
+.report-tat-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.report-tat-row svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.test-card-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.1rem;
+  border-top: 1px solid #eef2f6;
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.price-tag {
+  color: var(--text);
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.strike-price {
+  color: #94A3B8;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
+.action-circle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.22);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-circle-btn.is-accent {
+  background: var(--primary);
+}
+
+.action-circle-btn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.06);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.35);
+}
+
