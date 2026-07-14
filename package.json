@@ -29,6 +29,8 @@
   },
   "scripts": {
     "dev": "tsx backend/src/server.js",
+    "dev:api": "tsx backend/src/server.js",
+    "dev:web": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "start": "node backend/src/server.js"
