@@ -18,18 +18,29 @@ const inquiryRoutes = require('./routes/inquiryRoutes');
 const cmsRoutes = require('./routes/cmsRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
-async function startServer() {
-  const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
-  const HOST = process.env.HOST || '0.0.0.0';
-  const apiOnly = process.env.API_ONLY === '1' || process.env.API_ONLY === 'true';
-  const clientOrigins = [
+function parseOrigins() {
+  const fromList = String(process.env.CLIENT_URLS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return [
     process.env.CLIENT_URL,
+    ...fromList,
     'http://localhost:3000',
     'http://localhost:5173',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5173',
   ].filter(Boolean);
+}
+
+async function startServer() {
+  const app = express();
+  const PORT = Number(process.env.PORT) || 3000;
+  const HOST = process.env.HOST || '0.0.0.0';
+  const apiOnly = process.env.API_ONLY === '1' || process.env.API_ONLY === 'true';
+  const isProd = process.env.NODE_ENV === 'production';
+  const clientOrigins = parseOrigins();
 
   process.on('unhandledRejection', (err) => {
     console.error('Unhandled rejection:', err.message);
@@ -56,7 +67,8 @@ async function startServer() {
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin || clientOrigins.includes(origin)) {
+        // Allow non-browser tools and configured frontend origins
+        if (!origin || clientOrigins.includes(origin) || !isProd) {
           return callback(null, true);
         }
         return callback(null, true);
@@ -86,17 +98,25 @@ async function startServer() {
   app.use('/api/cms', cmsRoutes);
   app.use('/api/admin', adminRoutes);
 
-  if (!apiOnly && process.env.NODE_ENV !== 'production') {
+  if (!apiOnly && !isProd) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (!apiOnly && isProd) {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get(/^(?!\/api(?:\/|$)|\/uploads(?:\/|$)).*/, (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
+    });
+  } else {
+    app.get('/', (_req, res) => {
+      res.json({
+        status: 'ok',
+        message: 'API-only mode. Point VITE_API_URL at this host.',
+        health: '/api/health',
+      });
     });
   }
 
@@ -107,8 +127,11 @@ async function startServer() {
 
   app.listen(PORT, HOST, () => {
     console.log(`API ready at http://${HOST}:${PORT}/api/health`);
-    if (!apiOnly && process.env.NODE_ENV !== 'production') {
+    if (!apiOnly && !isProd) {
       console.log(`App ready at http://localhost:${PORT}`);
+    }
+    if (apiOnly) {
+      console.log('Running in API_ONLY mode (no frontend middleware)');
     }
   });
 

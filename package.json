@@ -32,6 +32,7 @@
     "dev:api": "tsx backend/src/server.js",
     "dev:web": "vite",
     "build": "vite build",
+    "build:staging": "vite build",
     "preview": "vite preview",
     "start": "node backend/src/server.js"
   }

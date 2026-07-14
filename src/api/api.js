@@ -1,6 +1,16 @@
 import axios from 'axios';
 
 const apiBase = import.meta.env.VITE_API_URL || '/api';
+const apiOrigin = (() => {
+  try {
+    if (apiBase.startsWith('http')) {
+      return new URL(apiBase).origin;
+    }
+  } catch {
+    /* ignore */
+  }
+  return '';
+})();
 
 const api = axios.create({
   baseURL: apiBase,
@@ -86,6 +96,10 @@ export const adminAPI = {
 export const mediaUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http')) return path;
+  // Absolute asset paths hosted on the API server in split deployments
+  if (path.startsWith('/uploads') && apiOrigin) {
+    return `${apiOrigin}${path}`;
+  }
   return path;
 };
 

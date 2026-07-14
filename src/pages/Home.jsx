@@ -214,11 +214,11 @@ export default function Home() {
       cmsAPI.getHero().catch(() => null),
     ])
       .then(([popularTestsRes, popularPackagesRes, allTestsRes, allPackagesRes, diseasesRes, heroRes]) => {
-        setPopularTests(popularTestsRes.data.tests);
-        setPopularPackages(popularPackagesRes.data.packages);
-        setAllTests(allTestsRes.data.tests);
-        setAllPackages(allPackagesRes.data.packages);
-        setDiseases(diseasesRes.data.diseases);
+        setPopularTests(popularTestsRes.data.tests || []);
+        setPopularPackages(popularPackagesRes.data.packages || []);
+        setAllTests(allTestsRes.data.tests || []);
+        setAllPackages(allPackagesRes.data.packages || []);
+        setDiseases(diseasesRes.data.diseases || []);
         if (heroRes?.data) {
           setHero({
             badge: heroRes.data.badge,
@@ -230,6 +230,9 @@ export default function Home() {
             heroTags: heroRes.data.heroTags,
           });
         }
+      })
+      .catch((err) => {
+        console.error('Failed to load home data:', err?.message || err);
       })
       .finally(() => setLoading(false));
   }, []);
