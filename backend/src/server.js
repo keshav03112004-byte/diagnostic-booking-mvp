@@ -59,6 +59,8 @@ async function startServer() {
     await connectDB();
     await seedDatabase();
     await seedAdminAndCms();
+    const { refreshPincodeCache } = require('./controllers/adminServiceAreaController');
+    await refreshPincodeCache();
   } catch (err) {
     console.error('Failed to start database:', err.message);
     process.exit(1);

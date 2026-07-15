@@ -1,23 +1,23 @@
 export const siteConfig = {
   name: 'energex.life',
-  tagline: 'Advanced Diagnostics',
-  taglineHighlight: 'at Your Doorstep',
+  tagline: 'Advanced Diagnostics at',
+  taglineHighlight: 'Your Fingertips',
   description:
-    'Certified home sample collection from accredited labs. Accurate reports in 24 hours.',
-  badge: 'Accredited · At-Home Collection · Expert Analysis',
+    'Book diagnostic tests and full body scans from the comfort of your home. Certified samples. Advanced labs. Smart reports in 24 hours.',
+  badge: 'Accredited • At-Home Collection • Expert Analysis',
 };
 
 export const heroVideo = {
   src: '/videos/hero-health.mp4',
-  poster: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1920&q=80',
+  poster: '/images/how-it-works-consultant.png',
   caption: 'Clinical diagnostic laboratory analysis — book online, get reports in 24 hours',
 };
 
 export const heroStats = [
-  { value: '260+', label: 'Expert Consultants', icon: 'User' },
-  { value: '975+', label: 'Active Clients', icon: 'Users' },
-  { value: '724+', label: 'Projects Delivered', icon: 'CheckCircle' },
-  { value: '89+', label: 'Orders in Queue', icon: 'Inbox' },
+  { value: '13+', label: 'Lab Tests', icon: 'FlaskConical' },
+  { value: '5', label: 'Health Packages', icon: 'ClipboardList' },
+  { value: '24h', label: 'Report Delivery', icon: 'Clock' },
+  { value: '60min', label: 'Home Collection', icon: 'Home' },
 ];
 
 export const heroTags = ['Blood Tests', 'Full Body Checkup', 'Home Collection', 'Free Counselling'];

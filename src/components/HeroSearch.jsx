@@ -23,10 +23,30 @@ export default function HeroSearch({ tests = [], packages = [] }) {
     navigate(path);
   };
 
+  const submitSearch = () => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    if (matchedTests.length === 1 && matchedPackages.length === 0) {
+      goTo(`/tests/${matchedTests[0].slug}`);
+      return;
+    }
+    if (matchedPackages.length === 1 && matchedTests.length === 0) {
+      goTo(`/packages/${matchedPackages[0].slug}`);
+      return;
+    }
+    goTo(`/tests?search=${encodeURIComponent(trimmed)}`);
+  };
+
   return (
     <div className="hero-search">
-      <div className="hero-search-box">
-        <Search className="search-icon w-5 h-5 text-gray-400" />
+      <form
+        className="hero-search-box"
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitSearch();
+        }}
+      >
+        <Search className="search-icon" aria-hidden="true" />
         <input
           type="search"
           placeholder="Search tests, packages — Thyroid, CBC, Diabetes..."
@@ -37,13 +57,23 @@ export default function HeroSearch({ tests = [], packages = [] }) {
           }}
           onFocus={() => setShowResults(true)}
           onBlur={() => setTimeout(() => setShowResults(false), 200)}
+          aria-label="Search tests and packages"
         />
         {query && (
-          <button type="button" className="search-clear" onClick={() => setQuery('')}>
+          <button
+            type="button"
+            className="search-clear"
+            onClick={() => setQuery('')}
+            aria-label="Clear search"
+          >
             ×
           </button>
         )}
-      </div>
+        <button type="submit" className="hero-search-btn" aria-label="Search">
+          <Search size={16} strokeWidth={2.5} />
+          <span>Search</span>
+        </button>
+      </form>
 
       {showResults && q && (
         <div className="hero-search-results">

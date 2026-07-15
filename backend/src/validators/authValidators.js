@@ -8,8 +8,15 @@ exports.registerRules = [
 ];
 
 exports.loginRules = [
-  body('mobile').trim().notEmpty().withMessage('Mobile is required'),
   body('password').notEmpty().withMessage('Password is required'),
+  body('mobile').optional({ values: 'falsy' }).trim(),
+  body('username').optional({ values: 'falsy' }).trim(),
+  body().custom((_, { req }) => {
+    if (!req.body.mobile && !req.body.username) {
+      throw new Error('Username or mobile is required');
+    }
+    return true;
+  }),
 ];
 
 exports.bookingRules = [

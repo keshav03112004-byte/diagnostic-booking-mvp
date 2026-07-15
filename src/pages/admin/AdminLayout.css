@@ -143,6 +143,17 @@
 .status-replied { background: var(--primary-light); color: #047857; }
 .status-closed { background: #fee2e2; color: #b91c1c; }
 
+/* Booking / payment statuses */
+.status-booked { background: #dbeafe; color: #1d4ed8; }
+.status-sample_collected { background: #ede9fe; color: #6d28d9; }
+.status-processing { background: #ffedd5; color: #c2410c; }
+.status-report_ready { background: var(--primary-light); color: #047857; }
+.status-cancelled { background: #fee2e2; color: #b91c1c; }
+.status-pending { background: #fef3c7; color: #b45309; }
+.status-paid { background: var(--primary-light); color: #047857; }
+.status-failed { background: #fee2e2; color: #b91c1c; }
+.status-refunded { background: #f3f4f6; color: #4b5563; }
+
 .admin-form-grid {
   display: grid;
   gap: 1rem;

@@ -44,7 +44,7 @@
 
 .pincode-checker.default .pincode-result.success {
   background: var(--primary-light);
-  color: #047857;
+  color: var(--primary-dark);
 }
 
 .pincode-result.error {

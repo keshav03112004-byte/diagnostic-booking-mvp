@@ -103,7 +103,7 @@ export default function PackageDetail() {
           {/* Benefits */}
           {pkg.benefits?.length > 0 && (
             <section className="detail-section">
-              <h2>✨ Package Benefits</h2>
+              <h2>Package Benefits</h2>
               <ul className="benefits-list">
                 {pkg.benefits.map((benefit) => (
                   <li key={benefit}>{benefit}</li>
@@ -115,7 +115,7 @@ export default function PackageDetail() {
           {/* Tests by category */}
           {pkg.testCategories?.length > 0 ? (
             <section className="detail-section">
-              <h2>🧪 Tests Included ({testCount})</h2>
+              <h2>Tests Included ({testCount})</h2>
               {pkg.testCategories.map((cat) => (
                 <div key={cat.name} className="test-category-block">
                   <h4>{cat.name}</h4>
@@ -129,7 +129,7 @@ export default function PackageDetail() {
             </section>
           ) : (
             <section className="detail-section">
-              <h2>🧪 Tests Included ({testCount})</h2>
+              <h2>Tests Included ({testCount})</h2>
               <table className="tests-table">
                 <thead>
                   <tr>

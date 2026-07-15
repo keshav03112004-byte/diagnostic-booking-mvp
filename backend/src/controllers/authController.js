@@ -17,6 +17,7 @@ const handleValidation = (req, res) => {
 const formatUser = (user) => ({
   id: user._id,
   name: user.name,
+  username: user.username || '',
   mobile: user.mobile,
   email: user.email,
   age: user.age,
@@ -48,11 +49,15 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   if (!handleValidation(req, res)) return;
 
-  const { mobile, password } = req.body;
-  const user = await User.findOne({ mobile });
+  const { mobile, username, password } = req.body;
+  const user = username
+    ? await User.findOne({ username: String(username).trim().toLowerCase() })
+    : await User.findOne({ mobile });
 
   if (!user || !(await user.comparePassword(password))) {
-    return res.status(401).json({ message: 'Invalid mobile or password' });
+    return res.status(401).json({
+      message: username ? 'Invalid username or password' : 'Invalid mobile or password',
+    });
   }
 
   const token = signToken(user._id);

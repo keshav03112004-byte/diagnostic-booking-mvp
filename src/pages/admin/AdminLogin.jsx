@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../../components/Logo';
 import '../Auth.css';
+import './adminExtras.css';
 
 export default function AdminLogin() {
-  const [mobile, setMobile] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ export default function AdminLogin() {
     setError('');
     setLoading(true);
     try {
-      const data = await login(mobile, password);
+      const data = await login(username.trim(), password, { username: true });
       if (data.user?.role !== 'admin') {
         logout();
         setError('This account does not have admin access.');
@@ -37,38 +39,45 @@ export default function AdminLogin() {
   return (
     <div className="auth-page admin-login-page">
       <div className="auth-card card">
-        <div className="admin-login-badge">🔐 Admin</div>
+        <div className="admin-login-logo">
+          <Logo height={56} />
+        </div>
         <h1>Admin Login</h1>
-        <p className="auth-subtitle">Sign in to manage DiagBook content</p>
+        <p className="auth-subtitle">Sign in to manage energex.life</p>
         {error && <div className="alert alert-error">{error}</div>}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="admin-login-form">
           <div className="form-group">
-            <label>Mobile Number</label>
+            <label htmlFor="admin-username">Username</label>
             <input
+              id="admin-username"
               required
-              type="tel"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-              placeholder="Admin mobile"
-              maxLength={10}
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <label htmlFor="admin-password">Password</label>
             <input
+              id="admin-password"
               required
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Admin password"
+              placeholder="Enter password"
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
+          <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In to Admin'}
           </button>
         </form>
         <p className="auth-footer">
-          <Link to="/">← Back to website</Link>
+          <a href={import.meta.env.VITE_APP_MODE === 'admin' ? 'http://localhost:5173/' : '/'}>
+            ← Back to website
+          </a>
         </p>
       </div>
     </div>

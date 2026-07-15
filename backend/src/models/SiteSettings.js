@@ -9,13 +9,13 @@ const siteSettingsSchema = new mongoose.Schema(
   {
     key: { type: String, unique: true, default: 'main' },
     siteName: { type: String, default: 'energex.life' },
-    badge: { type: String, default: 'Accredited · At-Home Collection · Expert Analysis' },
-    tagline: { type: String, default: 'Precision Health & Wellness with' },
-    taglineHighlight: { type: String, default: 'Advanced Diagnostics at Home' },
+    badge: { type: String, default: 'Accredited • At-Home Collection • Expert Analysis' },
+    tagline: { type: String, default: 'Advanced Diagnostics at' },
+    taglineHighlight: { type: String, default: 'Your Fingertips' },
     description: {
       type: String,
       default:
-        'Book diagnostic tests and full body scans in under 2 minutes. Certified home sample collection from premium accredited labs. Advanced smart reports in 24 hours.',
+        'Book diagnostic tests and full body scans from the comfort of your home. Certified samples. Advanced labs. Smart reports in 24 hours.',
     },
     heroVideo: {
       src: {
@@ -44,6 +44,10 @@ const siteSettingsSchema = new mongoose.Schema(
     heroTags: {
       type: [String],
       default: ['Blood Tests', 'Full Body Checkup', 'Home Collection', 'Free Counselling'],
+    },
+    serviceablePincodes: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

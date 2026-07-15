@@ -14,20 +14,51 @@ const getOrCreateSettings = async () => {
       settings.siteName = 'energex.life';
       needsSave = true;
     }
-    if (settings.badge === 'Trusted · At-Home · NABL Labs' || !settings.badge) {
-      settings.badge = 'Accredited · At-Home Collection · Expert Analysis';
+    if (
+      settings.badge === 'Trusted · At-Home · NABL Labs'
+      || settings.badge === 'Accredited · At-Home Collection · Expert Analysis'
+      || !settings.badge
+    ) {
+      settings.badge = 'Accredited • At-Home Collection • Expert Analysis';
       needsSave = true;
     }
-    if (settings.tagline === 'Your Health Deserves' || settings.tagline === 'Precision Health & Wellness with' || !settings.tagline) {
-      settings.tagline = 'Advanced Diagnostics';
+    if (
+      settings.tagline === 'Your Health Deserves'
+      || settings.tagline === 'Precision Health & Wellness with'
+      || settings.tagline === 'Advanced Diagnostics'
+      || !settings.tagline
+    ) {
+      settings.tagline = 'Advanced Diagnostics at';
       needsSave = true;
     }
-    if (settings.taglineHighlight === 'Care at Your Doorstep' || settings.taglineHighlight === 'Advanced Diagnostics at Home' || !settings.taglineHighlight) {
-      settings.taglineHighlight = 'at Your Doorstep';
+    if (
+      settings.taglineHighlight === 'Care at Your Doorstep'
+      || settings.taglineHighlight === 'Advanced Diagnostics at Home'
+      || settings.taglineHighlight === 'at Your Doorstep'
+      || !settings.taglineHighlight
+    ) {
+      settings.taglineHighlight = 'Your Fingertips';
       needsSave = true;
     }
-    if (settings.description?.startsWith('Book diagnostic tests in 2 minutes') || settings.description?.startsWith('Book diagnostic tests and full body scans') || !settings.description) {
-      settings.description = 'Certified home sample collection from accredited labs. Accurate reports in 24 hours.';
+    if (
+      settings.description?.startsWith('Book diagnostic tests in 2 minutes')
+      || settings.description?.startsWith('Certified home sample collection')
+      || !settings.description
+    ) {
+      settings.description =
+        'Book diagnostic tests and full body scans from the comfort of your home. Certified samples. Advanced labs. Smart reports in 24 hours.';
+      needsSave = true;
+    }
+    // Ensure hero stats match the redesign mockup when still on legacy icons/labels
+    const stats = Array.isArray(settings.heroStats) ? settings.heroStats : [];
+    const legacyStatLabels = ['Expert Consultants', 'Active Clients', 'Projects Delivered', 'Orders in Queue'];
+    if (!stats.length || stats.some((s) => legacyStatLabels.includes(s.label))) {
+      settings.heroStats = [
+        { value: '13+', label: 'Lab Tests', icon: 'FlaskConical' },
+        { value: '5', label: 'Health Packages', icon: 'ClipboardList' },
+        { value: '24h', label: 'Report Delivery', icon: 'Clock' },
+        { value: '60min', label: 'Home Collection', icon: 'Home' },
+      ];
       needsSave = true;
     }
     // Prefer local hero video over legacy remote/demo sources

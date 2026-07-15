@@ -65,7 +65,8 @@
 
 .inquiry-modal-title {
   margin: 0 0 0.35rem;
-  color: var(--text);
+  color: var(--secondary);
+  font-family: var(--font-display);
   font-size: 1.45rem;
   font-weight: 800;
   letter-spacing: -0.02em;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Phone, Mail, MapPin } from 'lucide-react';
 import { inquiryAPI } from '../api/api';
 import './Contact.css';
 
@@ -46,9 +47,18 @@ export default function Contact() {
             <h2>Get in Touch</h2>
             <p>Our team typically responds within 24 hours on business days.</p>
             <ul className="contact-details">
-              <li>📞 +91 999-888-0005</li>
-              <li>📧 support@energex.life</li>
-              <li>📍 Gurgaon, Delhi NCR & Bangalore</li>
+              <li>
+                <Phone size={16} strokeWidth={2.25} />
+                <a href="tel:+919998880005">+91 999-888-0005</a>
+              </li>
+              <li>
+                <Mail size={16} strokeWidth={2.25} />
+                <a href="mailto:support@energex.life">support@energex.life</a>
+              </li>
+              <li>
+                <MapPin size={16} strokeWidth={2.25} />
+                <span>Gurgaon, Delhi NCR & Bangalore</span>
+              </li>
             </ul>
             <div className="contact-hours">
               <strong>Support Hours</strong>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { testAPI, packageAPI, diseaseAPI } from '../api/api';
 import TestCard from '../components/TestCard';
@@ -6,36 +6,115 @@ import PackageCard from '../components/PackageCard';
 import DiseaseCard from '../components/DiseaseCard';
 import PincodeChecker from '../components/PincodeChecker';
 import HeroSearch from '../components/HeroSearch';
-import HeroVideoBackground from '../components/HeroVideoBackground';
 import FloatingCTA from '../components/FloatingCTA';
 import CtaBubbleBackground from '../components/CtaBubbleBackground';
 import { useInquiryModal } from '../context/InquiryModalContext';
 import { siteConfig, heroStats as defaultStats, heroTags as defaultTags, heroVideo as defaultVideo } from '../config/siteConfig';
 import { cmsAPI } from '../api/api';
-import { Activity, Package, Zap, Compass, ChevronRight, Droplet, User, Users, CheckCircle, Inbox, Home as HomeIcon, MessageSquare, ShieldCheck, Phone, ArrowUpRight, Pill, ScanLine } from 'lucide-react';
+import {
+  Activity,
+  Package,
+  Zap,
+  Compass,
+  Droplet,
+  User,
+  Users,
+  CheckCircle,
+  Inbox,
+  Home as HomeIcon,
+  MessageSquare,
+  ShieldCheck,
+  Phone,
+  ArrowUpRight,
+  ArrowLeft,
+  ArrowRight,
+  Pill,
+  ScanLine,
+  FlaskConical,
+  ClipboardList,
+  Clock,
+  FileText,
+  Sparkles,
+  BadgeCheck,
+  Syringe,
+  IndianRupee,
+  Stethoscope,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import '../components/cards.css';
 import './Home.css';
 
 const VALUE_PROPS = [
   {
-    icon: HomeIcon,
+    key: 'home',
+    badge: 'Home Collection',
     title: 'Free Home Collection',
     desc: 'Within 60 minutes of booking*',
   },
   {
-    icon: Activity,
+    key: 'reports',
+    badge: 'Digital Reports',
     title: 'Smart Digital Reports',
     desc: 'Real-time tracking & delivery',
   },
   {
-    icon: MessageSquare,
+    key: 'counsel',
+    badge: 'Counselling',
     title: 'Free Report Counselling',
     desc: 'Expert guidance on your results',
   },
 ];
 
-const STAT_CARD_TONES = ['one', 'two', 'three', 'four'];
+const REPORT_MARKERS = [
+  { name: 'Hemoglobin', value: '13.8 g/dL', position: 62, status: 'In Range' },
+  { name: 'Glucose', value: '92 mg/dL', position: 48, status: 'In Range' },
+  { name: 'Vitamin D', value: '38 ng/mL', position: 55, status: 'In Range' },
+];
+
+const COUNSEL_ITEMS = [
+  {
+    icon: MessageSquare,
+    tone: 'teal',
+    title: 'Result walkthrough',
+    detail: 'Doctor-led review of every marker',
+  },
+  {
+    icon: FileText,
+    tone: 'blue',
+    title: 'Actionable next steps',
+    detail: 'Clear plan tailored to your report',
+  },
+  {
+    icon: Sparkles,
+    tone: 'amber',
+    title: 'Lifestyle guidance',
+    detail: 'Diet & habits matched to your labs',
+  },
+  {
+    icon: Phone,
+    tone: 'green',
+    title: 'Follow-up support',
+    detail: 'Ask questions anytime after booking',
+  },
+];
+
+const CONCERN_TABS = [
+  {
+    id: 'specialties',
+    label: 'Specialties',
+    slugs: ['heart', 'kidney', 'liver', 'thyroid', 'vitamins', 'pregnancy'],
+  },
+  {
+    id: 'conditions',
+    label: 'Conditions',
+    slugs: ['anaemia', 'arthritis', 'diabetes', 'fever', 'thyroid', 'heart'],
+  },
+  {
+    id: 'procedures',
+    label: 'Procedures',
+    slugs: ['pregnancy', 'vitamins', 'diabetes', 'kidney', 'liver', 'anaemia'],
+  },
+];
 
 const HOW_IT_WORKS_CYCLE_MS = 9000;
 
@@ -44,16 +123,22 @@ const HOW_IT_WORKS_STEPS = [
     icon: Pill,
     title: 'Book Online',
     desc: 'Choose tests or packages and pick a convenient time slot',
+    image: '/images/how-it-works-consultant.png',
+    alt: 'Healthcare consultant ready to help you book diagnostic tests',
   },
   {
     icon: ScanLine,
     title: 'Home Collection',
     desc: 'Certified phlebotomist visits your doorstep for sample collection',
+    image: '/images/how-it-works-collection.png',
+    alt: 'Certified phlebotomist collecting a sample at home',
   },
   {
     icon: ShieldCheck,
     title: 'Get Smart Report',
     desc: 'Digital report with expert counselling delivered within 24 hours',
+    image: '/images/how-it-works-report.png',
+    alt: 'Patient reviewing a smart digital lab report',
   },
 ];
 
@@ -101,13 +186,41 @@ const SERVICE_TILES = [
 ];
 
 const TRUST_STATS = [
-  { value: '10K+', label: 'Happy Patients' },
-  { value: '13+', label: 'Lab Tests' },
-  { value: '24h', label: 'Report TAT' },
-  { value: 'NABL', label: 'Accredited Labs' },
+  { value: '10K+', label: 'Happy Patients', Icon: Users },
+  { value: '13+', label: 'Lab Tests', Icon: FlaskConical },
+  { value: '24h', label: 'Report TAT', Icon: Clock },
+  { value: 'NABL', label: 'Accredited Labs', Icon: BadgeCheck },
 ];
 
-const brandIconProps = { size: 16, color: 'var(--primary)', strokeWidth: 2.25 };
+const TRUST_FEATURES = [
+  {
+    title: 'NABL accredited labs',
+    detail: 'Partner laboratories with accredited quality systems you can trust.',
+    Icon: BadgeCheck,
+  },
+  {
+    title: 'Certified collection',
+    detail: 'Trained phlebotomists for safe, hygienic home sample collection.',
+    Icon: Syringe,
+  },
+  {
+    title: 'Smart reports in 24h',
+    detail: 'Clear digital reports delivered quickly, usually within a day.',
+    Icon: FileText,
+  },
+  {
+    title: 'Expert counselling',
+    detail: 'Free report counselling so results are easy to understand.',
+    Icon: Stethoscope,
+  },
+  {
+    title: 'Transparent pricing',
+    detail: 'Upfront costs with no hidden charges at checkout.',
+    Icon: IndianRupee,
+  },
+];
+
+const brandIconProps = { size: 14, color: 'var(--primary)', strokeWidth: 2.25 };
 
 const getTagIcon = (tag) => {
   const t = tag.toLowerCase();
@@ -141,6 +254,193 @@ export default function Home() {
   const [activeHowStep, setActiveHowStep] = useState(0);
   const [howInView, setHowInView] = useState(false);
   const [ctaPointer, setCtaPointer] = useState({ x: 0.5, y: 0.5 });
+  const [concernTab, setConcernTab] = useState('specialties');
+  const [selectedConcern, setSelectedConcern] = useState(null);
+  const [popularLoopIdx, setPopularLoopIdx] = useState(0);
+  const [popularPaused, setPopularPaused] = useState(false);
+  const popularTrackRef = useRef(null);
+  const popularJumpingRef = useRef(false);
+  const popularReadyRef = useRef(false);
+  const popularAnimatingRef = useRef(false);
+  const concernRailRef = useRef(null);
+  const [concernScroll, setConcernScroll] = useState({
+    canScroll: false,
+    progress: 0,
+    atStart: true,
+    atEnd: true,
+  });
+
+  const updateConcernScroll = useCallback(() => {
+    const el = concernRailRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const canScroll = maxScroll > 8;
+    const ratio = canScroll ? el.scrollLeft / maxScroll : 0;
+    setConcernScroll({
+      canScroll,
+      progress: canScroll ? Math.min(100, Math.max(12, ratio * 100)) : 0,
+      atStart: el.scrollLeft <= 8,
+      atEnd: el.scrollLeft >= maxScroll - 8,
+    });
+  }, []);
+
+  const scrollConcernsBy = useCallback((direction) => {
+    const el = concernRailRef.current;
+    if (!el) return;
+    const step = Math.max(168, Math.round(el.clientWidth * 0.72));
+    el.scrollBy({ left: direction * step, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    const el = concernRailRef.current;
+    if (el) el.scrollLeft = 0;
+    setSelectedConcern(null);
+  }, [concernTab]);
+
+  useEffect(() => {
+    const el = concernRailRef.current;
+    if (!el) return undefined;
+
+    updateConcernScroll();
+    const frame = requestAnimationFrame(updateConcernScroll);
+    const observer = new ResizeObserver(updateConcernScroll);
+    observer.observe(el);
+    el.addEventListener('scroll', updateConcernScroll, { passive: true });
+    window.addEventListener('resize', updateConcernScroll);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      el.removeEventListener('scroll', updateConcernScroll);
+      window.removeEventListener('resize', updateConcernScroll);
+    };
+  }, [concernTab, diseases, updateConcernScroll]);
+
+  const popularCarouselTests = useMemo(() => popularTests.slice(0, 8), [popularTests]);
+  const popularCount = popularCarouselTests.length;
+
+  const popularLoopSlides = useMemo(() => {
+    if (popularCount === 0) return [];
+    if (popularCount === 1) {
+      return [{ test: popularCarouselTests[0], realIndex: 0, key: `solo-${popularCarouselTests[0]._id}` }];
+    }
+    return [0, 1, 2].flatMap((copy) =>
+      popularCarouselTests.map((test, realIndex) => ({
+        test,
+        realIndex,
+        key: `${copy}-${test._id}`,
+      }))
+    );
+  }, [popularCarouselTests, popularCount]);
+
+  const scrollPopularToIndex = useCallback((index, behavior = 'smooth') => {
+    const track = popularTrackRef.current;
+    if (!track) return;
+    const slide = track.querySelector(`[data-popular-loop="${index}"]`);
+    if (!slide) return;
+
+    // Measure after layout so active width is already applied
+    const trackRect = track.getBoundingClientRect();
+    const slideRect = slide.getBoundingClientRect();
+    const delta =
+      slideRect.left + slideRect.width / 2 - (trackRect.left + trackRect.width / 2);
+
+    if (Math.abs(delta) < 1) return;
+    track.scrollTo({ left: track.scrollLeft + delta, behavior });
+  }, []);
+
+  const normalizePopularLoopIdx = useCallback((index) => {
+    if (popularCount < 2) return index;
+    if (index < popularCount) return index + popularCount;
+    if (index >= popularCount * 2) return index - popularCount;
+    return index;
+  }, [popularCount]);
+
+  const stepPopularCarousel = useCallback((direction) => {
+    if (popularCount < 2 || popularJumpingRef.current || popularAnimatingRef.current) return;
+    popularAnimatingRef.current = true;
+    setPopularLoopIdx((idx) => idx + direction);
+    window.setTimeout(() => {
+      popularAnimatingRef.current = false;
+    }, 520);
+  }, [popularCount]);
+
+  const focusPopularSlide = useCallback((realIndex) => {
+    if (popularCount < 2) {
+      setPopularLoopIdx(0);
+      return;
+    }
+    const copy = Math.min(2, Math.max(0, Math.floor(popularLoopIdx / popularCount)));
+    popularAnimatingRef.current = true;
+    setPopularLoopIdx(copy * popularCount + realIndex);
+    window.setTimeout(() => {
+      popularAnimatingRef.current = false;
+    }, 520);
+  }, [popularCount, popularLoopIdx]);
+
+  useEffect(() => {
+    if (popularCount === 0) return undefined;
+    popularReadyRef.current = false;
+    const start = popularCount > 1 ? popularCount : 0;
+    popularJumpingRef.current = true;
+    setPopularLoopIdx(start);
+    const frame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scrollPopularToIndex(start, 'auto');
+        popularJumpingRef.current = false;
+        popularReadyRef.current = true;
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [popularCount, scrollPopularToIndex]);
+
+  useEffect(() => {
+    if (!popularReadyRef.current || popularCount < 2) return undefined;
+
+    if (popularJumpingRef.current) {
+      requestAnimationFrame(() => {
+        scrollPopularToIndex(popularLoopIdx, 'auto');
+        popularJumpingRef.current = false;
+      });
+      return undefined;
+    }
+
+    requestAnimationFrame(() => {
+      scrollPopularToIndex(popularLoopIdx, 'smooth');
+    });
+
+    const isCloneEdge =
+      popularLoopIdx < popularCount || popularLoopIdx >= popularCount * 2;
+
+    if (!isCloneEdge) return undefined;
+
+    // After the wrap animation finishes, snap to the matching middle clone
+    const wrapTimer = window.setTimeout(() => {
+      const normalized = normalizePopularLoopIdx(popularLoopIdx);
+      if (normalized === popularLoopIdx) return;
+      popularJumpingRef.current = true;
+      setPopularLoopIdx(normalized);
+    }, 480);
+
+    return () => window.clearTimeout(wrapTimer);
+  }, [popularLoopIdx, popularCount, scrollPopularToIndex, normalizePopularLoopIdx]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (!popularReadyRef.current) return;
+      scrollPopularToIndex(popularLoopIdx, 'auto');
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [popularLoopIdx, scrollPopularToIndex]);
+
+  useEffect(() => {
+    if (loading || popularPaused || popularCount < 2) return undefined;
+    const timer = window.setInterval(() => {
+      stepPopularCarousel(1);
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [loading, popularPaused, popularCount, stepPopularCarousel]);
 
   const jumpToHowStep = useCallback((index) => {
     const stepCount = HOW_IT_WORKS_STEPS.length;
@@ -246,34 +546,54 @@ export default function Home() {
     );
   }
 
+  const heroStatIconMap = {
+    FlaskConical,
+    ClipboardList,
+    Clock,
+    Home: HomeIcon,
+    User,
+    Users,
+    CheckCircle,
+    Inbox,
+    Activity,
+  };
+
+  const heroStatLabelIconMap = {
+    'Lab Tests': FlaskConical,
+    'Health Packages': ClipboardList,
+    'Report Delivery': Clock,
+    'Home Collection': HomeIcon,
+  };
+
   return (
     <>
-      {/* Hero with video background (Neo Block style) */}
-      <section className="hero hero-video-section">
-        <HeroVideoBackground video={hero.heroVideo} />
-
-        <div className="container hero-video-container-inner">
-          <div className="hero-video-content">
-            <span className="hero-badge-pulse">
+      <section className="hero hero-split-section">
+        <div className="hero-split-bg" aria-hidden="true" />
+        <div className="container hero-split-inner">
+          <div className="hero-split-copy">
+            <span className="hero-split-badge">
+              <CheckCircle size={14} strokeWidth={2.4} aria-hidden="true" />
               {hero.badge}
             </span>
 
-            <h1 className="hero-video-title">
-              {hero.tagline}
-              <br />
-              <span className="hero-highlight">
-                {hero.taglineHighlight.toLowerCase().startsWith('at ') ? (
-                  <>
-                    <span style={{ color: '#ffffff', fontWeight: 800 }}>at </span>
-                    <span style={{ color: 'var(--primary)', fontWeight: 800 }}>{hero.taglineHighlight.substring(3)}</span>
-                  </>
-                ) : (
-                  <span style={{ color: 'var(--primary)', fontWeight: 800 }}>{hero.taglineHighlight}</span>
-                )}
-              </span>
-            </h1>
+            <motion.h1
+              className="hero-split-title"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {hero.tagline}{' '}
+              <span className="hero-split-highlight">{hero.taglineHighlight}</span>
+            </motion.h1>
 
-            <p className="hero-video-desc">{hero.description}</p>
+            <motion.p
+              className="hero-split-desc"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {hero.description}
+            </motion.p>
 
             <div className="hero-tags">
               {hero.heroTags.map((tag) => (
@@ -287,7 +607,7 @@ export default function Home() {
             <div className="hero-actions">
               <button
                 type="button"
-                className="btn btn-primary btn-lg"
+                className="btn btn-primary btn-lg hero-btn-primary"
                 onClick={() =>
                   openInquiryModal({
                     subject: 'Booking Inquiry',
@@ -295,10 +615,10 @@ export default function Home() {
                   })
                 }
               >
-                <Zap size={16} color="#fff" strokeWidth={2.25} fill="#fff" />
+                <Zap size={15} color="#FACC15" strokeWidth={2.4} fill="#FACC15" />
                 Quick Book Now
               </button>
-              <Link to="/packages" className="btn btn-secondary-light btn-lg">
+              <Link to="/packages" className="btn btn-lg hero-btn-secondary">
                 View Health Packages
               </Link>
             </div>
@@ -308,60 +628,168 @@ export default function Home() {
             </div>
 
             <div className="hero-secure-badge">
-              <ShieldCheck size={18} color="var(--primary)" strokeWidth={2.25} />
+              <ShieldCheck size={16} color="var(--primary)" strokeWidth={2.25} />
               <span>Your data is secure & confidential</span>
             </div>
-          </div>
-        </div>
 
-
-      </section>
-
-      {/* Stats — Breazen-style pastel cards, brand theme */}
-      <section className="section section-hero-stats">
-        <div className="container">
-          <div className="hero-stats-row">
-            {hero.heroStats.map((stat, index) => {
-              const iconMap = { User, Users, CheckCircle, Inbox };
-              const Icon = iconMap[stat.icon] || Activity;
-              const tone = STAT_CARD_TONES[index % STAT_CARD_TONES.length];
-              return (
-                <article key={stat.label} className={`hero-stat-card tone-${tone}`}>
-                  <div className="stat-card-top">
-                    <span className="stat-label">{stat.label}</span>
-                    <span className="stat-icon-bubble" aria-hidden="true">
-                      <Icon size={16} strokeWidth={2.25} />
-                    </span>
-                  </div>
-                  <strong className="stat-value">{stat.value}</strong>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Value props — wide achievement-style strip */}
-      <section className="section section-value-strip">
-        <div className="container">
-          <div className="value-strip-banner">
-            <p className="value-strip-kicker">Why book with energex.life</p>
-            <div className="value-strip-inner">
-              {VALUE_PROPS.map((item) => {
-                const Icon = item.icon;
+            <div className="hero-inline-stats">
+              {hero.heroStats.map((stat) => {
+                const Icon =
+                  heroStatIconMap[stat.icon]
+                  || heroStatLabelIconMap[stat.label]
+                  || Activity;
+                const toneClass =
+                  stat.label === 'Lab Tests'
+                    ? 'tone-tests'
+                    : stat.label === 'Health Packages'
+                      ? 'tone-packages'
+                      : stat.label === 'Report Delivery'
+                        ? 'tone-report'
+                        : stat.label === 'Home Collection'
+                          ? 'tone-home'
+                          : 'tone-tests';
                 return (
-                  <div key={item.title} className="value-item">
-                    <span className="value-icon" aria-hidden="true">
-                      <Icon size={18} strokeWidth={2.25} />
+                  <article key={stat.label} className="hero-inline-stat">
+                    <span className={`hero-inline-stat-icon ${toneClass}`.trim()} aria-hidden="true">
+                      <Icon size={13} strokeWidth={2} />
                     </span>
-                    <div className="value-copy">
-                      <strong>{item.title}</strong>
-                      <span>{item.desc}</span>
+                    <div className="hero-inline-stat-copy">
+                      <strong>{stat.value}</strong>
+                      <span>{stat.label}</span>
                     </div>
-                  </div>
+                  </article>
                 );
               })}
             </div>
+          </div>
+
+          <motion.div
+            className="hero-split-visual"
+            initial={{ opacity: 0, x: 28 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="hero-product-stage">
+              <img
+                src="/images/hero-visual.png"
+                alt="Doctor consultation with at-home blood test insights and activity scores"
+                className="hero-product-image"
+                width={483}
+                height={519}
+                decoding="async"
+                fetchPriority="high"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Why book — insight cards */}
+      <section className="section section-value-strip">
+        <div className="container value-insights">
+          <header className="value-insights-header">
+            <h2 className="value-insights-title">
+              Why book with <em>energex.life</em>
+            </h2>
+          </header>
+
+          <div className="value-insights-grid">
+            {/* Card 1 — Free Home Collection */}
+            <article className="value-insight-card tone-mint">
+              <span className="value-insight-badge">{VALUE_PROPS[0].badge}</span>
+              <h3 className="value-insight-heading">{VALUE_PROPS[0].title}</h3>
+              <div className="value-insight-photo-wrap">
+                <img
+                  src="/images/value-home-collection.png"
+                  alt="Phlebotomist collecting a blood sample during a free home visit"
+                  className="value-insight-photo"
+                  width={480}
+                  height={560}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="value-insight-overlay">
+                  <span className="value-insight-overlay-icon" aria-hidden="true">
+                    <HomeIcon size={16} strokeWidth={2.1} />
+                  </span>
+                  <div className="value-insight-overlay-copy">
+                    <strong>At-home sample pickup</strong>
+                    <span>{VALUE_PROPS[0].desc}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="value-insight-overlay-cta"
+                    onClick={() =>
+                      openInquiryModal({
+                        subject: 'Home Collection Booking',
+                        message: 'I would like to book a free home sample collection.',
+                      })
+                    }
+                  >
+                    Book Pickup
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            {/* Card 2 — Smart Digital Reports */}
+            <article className="value-insight-card tone-slate">
+              <span className="value-insight-badge">{VALUE_PROPS[1].badge}</span>
+              <h3 className="value-insight-heading">{VALUE_PROPS[1].title}</h3>
+              <div className="value-report-phone">
+                <div className="value-report-phone-inner">
+                  <p className="value-report-kicker">You&apos;re doing great!</p>
+                  <p className="value-report-status">
+                    <span className="value-report-dot" />
+                    5 In Range
+                  </p>
+                  <ul className="value-report-metrics">
+                    {REPORT_MARKERS.map((marker) => (
+                      <li key={marker.name} className="value-report-metric">
+                        <div className="value-report-metric-top">
+                          <span>{marker.name}</span>
+                          <strong>{marker.value}</strong>
+                        </div>
+                        <div className="value-report-bar" aria-hidden="true">
+                          <span className="seg seg-low" />
+                          <span className="seg seg-mid" />
+                          <span className="seg seg-high" />
+                          <span
+                            className="value-report-marker"
+                            style={{ left: `${marker.position}%` }}
+                          />
+                        </div>
+                        <span className="value-report-range">{marker.status}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="value-report-footer">{VALUE_PROPS[1].desc}</p>
+                </div>
+              </div>
+            </article>
+
+            {/* Card 3 — Free Report Counselling */}
+            <article className="value-insight-card tone-mint">
+              <span className="value-insight-badge">{VALUE_PROPS[2].badge}</span>
+              <h3 className="value-insight-heading">{VALUE_PROPS[2].title}</h3>
+              <p className="value-insight-lede">{VALUE_PROPS[2].desc}</p>
+              <ul className="value-counsel-list">
+                {COUNSEL_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.title} className="value-counsel-item">
+                      <span className={`value-counsel-icon tone-${item.tone}`} aria-hidden="true">
+                        <Icon size={15} strokeWidth={2} />
+                      </span>
+                      <div className="value-counsel-copy">
+                        <strong>{item.title}</strong>
+                        <span>{item.detail}</span>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </article>
           </div>
         </div>
       </section>
@@ -372,7 +800,7 @@ export default function Home() {
         <div className="container services-bento-inner">
           <header className="modern-tiles-header">
             <div className="modern-tiles-header-copy">
-              <span className="modern-tiles-tagline">✨ INTEGRATED DIAGNOSTICS</span>
+              <span className="modern-tiles-tagline">INTEGRATED DIAGNOSTICS</span>
               <h2 className="modern-tiles-title">
                 Precision Diagnostic <em>Ecosystem</em>
               </h2>
@@ -388,8 +816,12 @@ export default function Home() {
               to={SERVICE_TILES[0].link}
               className="bento-card bento-feature"
             >
-              <div className="bento-feature-media" aria-hidden="true" />
-              <div className="bento-feature-overlay" aria-hidden="true" />
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-blood-tests.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-dark" aria-hidden="true" />
               <div className="bento-feature-content">
                 <span className="bento-pill bento-pill-glass">{SERVICE_TILES[0].offer}</span>
                 <h3>{SERVICE_TILES[0].title}</h3>
@@ -406,8 +838,14 @@ export default function Home() {
               to={SERVICE_TILES[1].link}
               className="bento-card bento-packages"
             >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-packages.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-teal" aria-hidden="true" />
               <div className="bento-card-top">
-                <span className="bento-pill bento-pill-dark">{SERVICE_TILES[1].offer}</span>
+                <span className="bento-pill bento-pill-glass">{SERVICE_TILES[1].offer}</span>
                 <Package size={22} strokeWidth={1.75} className="bento-corner-icon" />
               </div>
               <div className="bento-card-copy">
@@ -421,6 +859,12 @@ export default function Home() {
               to={SERVICE_TILES[3].link}
               className="bento-card bento-concern"
             >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-concerns.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-navy" aria-hidden="true" />
               <Compass size={22} strokeWidth={1.75} className="bento-corner-icon" />
               <div className="bento-card-copy">
                 <h3>{SERVICE_TILES[3].title}</h3>
@@ -439,12 +883,72 @@ export default function Home() {
                 })
               }
             >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-quick-book.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-sky" aria-hidden="true" />
               <Zap size={22} strokeWidth={1.75} className="bento-corner-icon" />
               <div className="bento-card-copy">
                 <h3>{SERVICE_TILES[2].title}</h3>
                 <p>{SERVICE_TILES[2].desc}</p>
               </div>
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Promo care banner */}
+      <section className="section section-promo-banner">
+        <div className="container">
+          <div className="promo-banner">
+            <div className="promo-banner-waves" aria-hidden="true">
+              <svg className="promo-banner-wave promo-banner-wave-1" viewBox="0 0 800 400" preserveAspectRatio="none">
+                <path
+                  d="M0 280 C 160 200, 280 340, 420 250 C 560 160, 680 300, 800 220 L 800 400 L 0 400 Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <svg className="promo-banner-wave promo-banner-wave-2" viewBox="0 0 800 400" preserveAspectRatio="none">
+                <path
+                  d="M0 320 C 180 240, 320 360, 480 280 C 620 200, 720 320, 800 260 L 800 400 L 0 400 Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+
+            <div className="promo-banner-copy">
+              <h2 className="promo-banner-title">energex.life</h2>
+              <p className="promo-banner-desc">
+                At energex.life, we are committed to providing exceptional diagnostic care with a focus on quality, trust, and innovation.
+              </p>
+              <button
+                type="button"
+                className="promo-banner-cta"
+                onClick={() =>
+                  openInquiryModal({
+                    subject: 'Booking Inquiry',
+                    message: 'I would like to book a diagnostic test with expert guidance.',
+                  })
+                }
+              >
+                Book Test Now
+                <ArrowRight size={16} strokeWidth={2.5} />
+              </button>
+            </div>
+
+            <div className="promo-banner-visual">
+              <img
+                src="/images/promo-doctor.png"
+                alt="Doctor ready to guide your diagnostic booking"
+                className="promo-banner-doctor"
+                width={420}
+                height={520}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -460,16 +964,62 @@ export default function Home() {
                 Popular <em>tests</em>, ready to book.
               </h2>
             </div>
-            <Link to="/tests" className="btn btn-primary">
-              View all tests
-              <ArrowUpRight size={15} strokeWidth={2.75} />
-            </Link>
+            <div className="popular-tests-header-actions">
+              <Link to="/tests" className="btn btn-primary">
+                View all tests
+                <ArrowUpRight size={15} strokeWidth={2.75} />
+              </Link>
+            </div>
           </header>
 
-          <div className="popular-tests-grid">
-            {popularTests.slice(0, 8).map((test) => (
-              <TestCard key={test._id} test={test} />
-            ))}
+          <div
+            className="popular-tests-carousel"
+            onMouseEnter={() => setPopularPaused(true)}
+            onMouseLeave={() => setPopularPaused(false)}
+            onFocusCapture={() => setPopularPaused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setPopularPaused(false);
+              }
+            }}
+          >
+            <div className="popular-tests-track" ref={popularTrackRef}>
+              {popularLoopSlides.map((slide, index) => (
+                <div
+                  key={slide.key}
+                  className={`popular-tests-slide${index === popularLoopIdx ? ' is-active' : ''}`}
+                  data-popular-loop={index}
+                >
+                  <TestCard
+                    test={slide.test}
+                    variant="carousel"
+                    active={index === popularLoopIdx}
+                    onActivate={() => focusPopularSlide(slide.realIndex)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {popularCount > 1 && (
+              <div className="popular-tests-nav" aria-label="Browse popular tests">
+                <button
+                  type="button"
+                  className="popular-tests-arrow"
+                  aria-label="Previous popular test"
+                  onClick={() => stepPopularCarousel(-1)}
+                >
+                  <ArrowLeft size={16} strokeWidth={2.25} />
+                </button>
+                <button
+                  type="button"
+                  className="popular-tests-arrow is-next"
+                  aria-label="Next popular test"
+                  onClick={() => stepPopularCarousel(1)}
+                >
+                  <ArrowRight size={16} strokeWidth={2.25} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -525,9 +1075,75 @@ export default function Home() {
           </header>
 
           <div className="concerns-grid">
-            {diseases.map((disease) => (
-              <DiseaseCard key={disease._id} disease={disease} />
-            ))}
+            <nav className="concerns-tabs" aria-label="Browse by category">
+              {CONCERN_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={`concerns-tab${concernTab === tab.id ? ' is-active' : ''}`}
+                  onClick={() => setConcernTab(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="concerns-panel">
+              {concernScroll.canScroll && (
+                <div className="concerns-rail-nav" aria-label="Browse more concerns">
+                  <div
+                    className="concerns-rail-progress"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={Math.round(concernScroll.progress)}
+                    aria-label="Scroll progress"
+                  >
+                    <span
+                      className="concerns-rail-progress-fill"
+                      style={{ width: `${concernScroll.progress}%` }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="concerns-rail-arrow"
+                    aria-label="Previous concerns"
+                    disabled={concernScroll.atStart}
+                    onClick={() => scrollConcernsBy(-1)}
+                  >
+                    <ArrowLeft size={16} strokeWidth={2.25} />
+                  </button>
+                  <button
+                    type="button"
+                    className="concerns-rail-arrow is-next"
+                    aria-label="Next concerns"
+                    disabled={concernScroll.atEnd}
+                    onClick={() => scrollConcernsBy(1)}
+                  >
+                    <ArrowRight size={16} strokeWidth={2.25} />
+                  </button>
+                </div>
+              )}
+
+              <div className="concerns-rail" ref={concernRailRef} role="list">
+                {(CONCERN_TABS.find((tab) => tab.id === concernTab)?.slugs || [])
+                  .map((slug) => diseases.find((disease) => disease.slug === slug))
+                  .filter(Boolean)
+                  .map((disease, index) => (
+                    <div key={disease._id} role="listitem">
+                      <DiseaseCard
+                        disease={disease}
+                        selected={
+                          selectedConcern
+                            ? selectedConcern === disease.slug
+                            : index === 3
+                        }
+                        onHighlight={() => setSelectedConcern(disease.slug)}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -536,29 +1152,65 @@ export default function Home() {
       <section className="section section-trust">
         <div className="trust-glow" aria-hidden="true" />
         <div className="container trust-inner">
-          <div className="trust-content">
-            <span className="trust-eyebrow">Why Choose energex.life</span>
-            <h2 className="trust-title">
-              Why Thousands Trust <em>energex.life</em> Labs
-            </h2>
-            <ul className="trust-list">
-              <li><span aria-hidden="true">✓</span> NABL accredited partner laboratories</li>
-              <li><span aria-hidden="true">✓</span> Certified phlebotomists for safe collection</li>
-              <li><span aria-hidden="true">✓</span> Smart reports delivered within 24 hours</li>
-              <li><span aria-hidden="true">✓</span> Free expert report counselling included</li>
-              <li><span aria-hidden="true">✓</span> Transparent pricing — no hidden charges</li>
-            </ul>
-            <Link to="/register" className="btn btn-primary btn-lg trust-cta">
-              Get Started Free
-            </Link>
-          </div>
-          <div className="trust-stats">
-            {TRUST_STATS.map((stat, index) => (
-              <div key={stat.label} className={`trust-stat tone-${(index % 4) + 1}`}>
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
+          <div className="trust-board">
+            <div className="trust-aside">
+              <header className="trust-header">
+                <span className="trust-eyebrow">Why Choose energex.life</span>
+                <h2 className="trust-title">
+                  Why Thousands Trust <em>energex.life</em> Labs
+                </h2>
+                <p className="trust-lede">
+                  Quality diagnostics, careful collection, and clear reports — built around your confidence at every step.
+                </p>
+                <Link to="/register" className="btn btn-primary btn-lg trust-cta">
+                  Get Started Free
+                  <ArrowUpRight size={18} strokeWidth={2.5} />
+                </Link>
+              </header>
+
+              <div className="trust-features">
+                {TRUST_FEATURES.map((feature) => {
+                  const FeatureIcon = feature.Icon;
+                  return (
+                    <article key={feature.title} className="trust-feature">
+                      <div className="trust-feature-icon" aria-hidden="true">
+                        <FeatureIcon size={22} strokeWidth={2.25} />
+                      </div>
+                      <div className="trust-feature-body">
+                        <h3>{feature.title}</h3>
+                        <p>{feature.detail}</p>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
-            ))}
+            </div>
+
+            <div className="trust-hero-media">
+              <img
+                src="/images/trust-hero-lab.png"
+                alt="energex.life diagnostic laboratory"
+                className="trust-hero-img"
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="trust-hero-stats">
+                {TRUST_STATS.map((stat) => {
+                  const StatIcon = stat.Icon;
+                  return (
+                    <div key={stat.label} className="trust-hero-stat">
+                      <span className="trust-stat-icon" aria-hidden="true">
+                        <StatIcon size={18} strokeWidth={2.1} />
+                      </span>
+                      <div className="trust-stat-copy">
+                        <strong>{stat.value}</strong>
+                        <span>{stat.label}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -580,15 +1232,20 @@ export default function Home() {
           <div className="how-process-layout">
             <div className="how-visual">
               <div className="how-visual-photo-wrap">
-                <img
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=960&q=80"
-                  alt="Healthcare consultant ready to help you book diagnostic tests"
-                  className="how-visual-photo"
-                />
+                {HOW_IT_WORKS_STEPS.map((step, index) => (
+                  <img
+                    key={step.title}
+                    src={step.image}
+                    alt={step.alt}
+                    className={`how-visual-photo${index === activeHowStep ? ' is-active' : ''}`}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                ))}
               </div>
 
-              <div className="how-visual-callout">
-                <span className="how-callout-pill">Book Online</span>
+              <div className="how-visual-callout" key={activeHowStep}>
+                <span className="how-callout-pill">{HOW_IT_WORKS_STEPS[activeHowStep].title}</span>
                 <svg
                   className="how-callout-arrow"
                   viewBox="0 0 96 64"

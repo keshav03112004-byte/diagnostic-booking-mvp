@@ -13,8 +13,12 @@
 }
 
 .auth-card h1 {
+  font-family: var(--font-display);
   font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin-bottom: 0.25rem;
+  color: var(--secondary);
 }
 
 .auth-subtitle {

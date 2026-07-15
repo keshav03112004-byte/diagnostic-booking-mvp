@@ -31,9 +31,12 @@
     "dev": "tsx backend/src/server.js",
     "dev:api": "tsx backend/src/server.js",
     "dev:web": "vite",
+    "dev:admin": "vite --config vite.admin.config.js",
     "build": "vite build",
+    "build:admin": "vite build --config vite.admin.config.js",
     "build:staging": "vite build",
     "preview": "vite preview",
+    "preview:admin": "vite preview --config vite.admin.config.js",
     "start": "node backend/src/server.js"
   }
 }

@@ -13,6 +13,9 @@ export default function Footer() {
         <div className="footer-brand">
           <Link to="/" className="footer-logo" aria-label="energex.life home">
             <Logo height={48} />
+            <span className="footer-slogan" aria-hidden="true">
+              better health. <span>better life</span>
+            </span>
           </Link>
           <p>
             Premium diagnostics & wellness checkups delivered to your doorstep.

@@ -21,8 +21,11 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const login = async (mobile, password) => {
-    const res = await authAPI.login({ mobile, password });
+  const login = async (identifier, password, options = {}) => {
+    const payload = options.username
+      ? { username: identifier, password }
+      : { mobile: identifier, password };
+    const res = await authAPI.login(payload);
     localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
     return res.data;

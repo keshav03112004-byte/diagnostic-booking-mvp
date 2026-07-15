@@ -78,14 +78,14 @@ export default function TestDetail() {
         <div className="detail-content">
           {/* Overview */}
           <section className="detail-section">
-            <h2>📋 About This Test</h2>
+            <h2>About This Test</h2>
             <p>{test.overview || test.description}</p>
           </section>
 
           {/* Parameters */}
           {test.parameters?.length > 0 && (
             <section className="detail-section">
-              <h2>🧪 Parameters Included ({test.parameters.length})</h2>
+              <h2>Parameters Included ({test.parameters.length})</h2>
               <div className="parameters-grid">
                 {test.parameters.map((param) => (
                   <div key={param} className="parameter-item">{param}</div>

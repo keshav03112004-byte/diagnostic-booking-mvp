@@ -4,9 +4,13 @@ import './AdminSidebar.css';
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
+  { to: '/admin/bookings', label: 'Bookings', icon: '🧾' },
   { to: '/admin/inquiries', label: 'Inquiries', icon: '💬' },
+  { to: '/admin/users', label: 'Users', icon: '👥' },
   { to: '/admin/tests', label: 'Tests', icon: '🧪' },
   { to: '/admin/packages', label: 'Packages', icon: '📦' },
+  { to: '/admin/diseases', label: 'Diseases', icon: '🩺' },
+  { to: '/admin/service-areas', label: 'Service Areas', icon: '📍' },
   { to: '/admin/cms/hero', label: 'Hero CMS', icon: '🎬' },
 ];
 
@@ -22,9 +26,9 @@ export default function AdminSidebar() {
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-brand">
-        <span className="admin-logo">D</span>
+        <span className="admin-logo">E</span>
         <div>
-          <strong>DiagBook</strong>
+          <strong>energex.life</strong>
           <span>Admin Panel</span>
         </div>
       </div>
@@ -48,10 +52,10 @@ export default function AdminSidebar() {
           <span className="admin-user-avatar">A</span>
           <div>
             <strong>{user?.name}</strong>
-            <span>{user?.mobile}</span>
+            <span>{user?.username || user?.mobile}</span>
           </div>
         </div>
-        <a href="/" target="_blank" rel="noreferrer" className="admin-view-site">
+        <a href="http://localhost:5173/" target="_blank" rel="noreferrer" className="admin-view-site">
           View Website →
         </a>
         <button type="button" onClick={handleLogout} className="admin-logout-btn">
