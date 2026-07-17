@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowUpRight, Clock } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { ArrowUpRight, Clock, Zap } from 'lucide-react';
+import { openWhatsApp, getBookingWhatsAppMessage } from '../utils/whatsapp';
 
 const CATEGORY_VISUALS = {
   DIABETES: {
@@ -115,18 +115,12 @@ function getCardDetails(name, test) {
 
 export default function TestCard({ test, variant = 'default', active = false, onActivate }) {
   const navigate = useNavigate();
-  const { addItem } = useCart();
   const detailPath = `/tests/${test.slug}`;
 
   const handleBook = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem({
-      itemType: 'test',
-      itemId: test._id,
-      name: test.name,
-      price: test.price,
-    });
+    openWhatsApp(getBookingWhatsAppMessage(test, 'test'));
   };
 
   const goToDetails = (e) => {
@@ -205,8 +199,9 @@ export default function TestCard({ test, variant = 'default', active = false, on
             type="button"
             className="assay-lens-discover"
             onClick={handleBook}
-            aria-label={`Book ${displayName}`}
+            aria-label={`Book ${displayName} on WhatsApp`}
           >
+            <Zap size={14} strokeWidth={2.4} fill="currentColor" />
             Book now
           </button>
         </div>

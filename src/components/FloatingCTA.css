@@ -13,6 +13,25 @@
   box-shadow: 0 10px 28px rgba(var(--secondary-rgb), 0.22);
 }
 
+.floating-cta .floating-btn-whatsapp {
+  background: #25D366;
+  border-color: #25D366;
+  color: #fff;
+}
+
+.floating-cta .floating-btn-whatsapp .whatsapp-icon {
+  flex-shrink: 0;
+  display: block;
+}
+
+.floating-cta .floating-btn-whatsapp:hover {
+  background: #1ebe57;
+  border-color: #1ebe57;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.35);
+}
+
 .floating-cta .btn-secondary-light {
   background: rgba(var(--secondary-rgb), 0.82);
   backdrop-filter: blur(10px);

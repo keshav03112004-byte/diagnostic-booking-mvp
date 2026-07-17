@@ -110,6 +110,17 @@
   transition: color 0.2s ease;
 }
 
+.footer-whatsapp-link {
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.footer-whatsapp-link svg {
+  flex-shrink: 0;
+  color: #FACC15;
+  fill: #FACC15;
+}
+
 .footer-link-btn {
   padding: 0;
   border: none;

@@ -78,6 +78,36 @@ svg {
   max-width: 100%;
 }
 
+svg.whatsapp-icon,
+.whatsapp-icon {
+  flex-shrink: 0;
+  display: block;
+  overflow: visible !important;
+  max-width: none !important;
+  max-height: none !important;
+  box-sizing: content-box;
+  vertical-align: middle;
+  align-self: center;
+}
+
+.whatsapp-icon path {
+  stroke: none !important;
+}
+
+.whatsapp-icon--brand,
+.whatsapp-icon--brand path {
+  fill: #25D366 !important;
+}
+
+.whatsapp-icon--inverse,
+.whatsapp-icon--inverse path {
+  fill: #fff !important;
+}
+
+.btn:has(.whatsapp-icon) {
+  overflow: visible;
+}
+
 a {
   color: inherit;
   text-decoration: none;

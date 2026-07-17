@@ -9,8 +9,9 @@ import FloatingCTA from '../components/FloatingCTA';
 import CtaBubbleBackground from '../components/CtaBubbleBackground';
 import FAQAccordion from '../components/FAQAccordion';
 import ScrollReveal from '../components/ScrollReveal';
-import { useInquiryModal } from '../context/InquiryModalContext';
+import WhatsAppIcon from '../components/WhatsAppIcon';
 import { siteConfig, heroStats, heroTags } from '../config/siteConfig';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 import {
   Activity,
   Zap,
@@ -23,7 +24,6 @@ import {
   Home as HomeIcon,
   MessageSquare,
   ShieldCheck,
-  Phone,
   ArrowUpRight,
   ArrowLeft,
   ArrowRight,
@@ -81,7 +81,7 @@ const HOME_FAQS = [
   {
     question: 'Can I book without creating an account?',
     answer:
-      'Yes. Use Quick Book or send a booking inquiry — no account is required. Our team will confirm your slot and guide you through the rest.',
+      'Yes. Tap Book Now or Quick Book to chat with us on WhatsApp — no account is required. Our team will confirm your slot and guide you through the rest.',
   },
   {
     question: 'Is report counselling included?',
@@ -209,7 +209,7 @@ const getTagIcon = (tag) => {
 };
 
 export default function Home() {
-  const { openInquiryModal } = useInquiryModal();
+  const whatsappUrl = getWhatsAppUrl();
   const [popularTests, setPopularTests] = useState([]);
   const [popularPackages, setPopularPackages] = useState([]);
   const [diseases, setDiseases] = useState([]);
@@ -577,19 +577,15 @@ export default function Home() {
             </div>
 
             <div className="hero-actions">
-              <button
-                type="button"
+              <a
+                href={whatsappUrl}
                 className="btn btn-primary btn-lg hero-btn-primary"
-                onClick={() =>
-                  openInquiryModal({
-                    subject: 'Booking Inquiry',
-                    message: 'I would like to book a diagnostic test or health package.',
-                  })
-                }
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Zap size={15} color="#FACC15" strokeWidth={2.4} fill="#FACC15" />
                 Quick Book Now
-              </button>
+              </a>
               <Link to="/packages" className="btn btn-lg hero-btn-secondary">
                 View Health Packages
               </Link>
@@ -800,15 +796,11 @@ export default function Home() {
             </Link>
 
             {/* Quick Book */}
-            <button
-              type="button"
+            <a
+              href={whatsappUrl}
               className="bento-card bento-quick"
-              onClick={() =>
-                openInquiryModal({
-                  subject: 'Quick Book Inquiry',
-                  message: 'I want to upload a prescription or list tests for home collection.',
-                })
-              }
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <div
                 className="bento-card-media"
@@ -821,7 +813,7 @@ export default function Home() {
                 <h3>{SERVICE_TILES[2].title}</h3>
                 <p>{SERVICE_TILES[2].desc}</p>
               </div>
-            </button>
+            </a>
           </div>
         </div>
       </ScrollReveal>
@@ -850,19 +842,15 @@ export default function Home() {
               <p className="promo-banner-desc">
                 At energex.life, we are committed to providing exceptional diagnostic care with a focus on quality, trust, and innovation.
               </p>
-              <button
-                type="button"
+              <a
+                href={whatsappUrl}
                 className="promo-banner-cta"
-                onClick={() =>
-                  openInquiryModal({
-                    subject: 'Booking Inquiry',
-                    message: 'I would like to book a diagnostic test with expert guidance.',
-                  })
-                }
+                target="_blank"
+                rel="noopener noreferrer"
               >
+                <Zap size={16} strokeWidth={2.4} fill="currentColor" />
                 Book Test Now
-                <ArrowRight size={16} strokeWidth={2.5} />
-              </button>
+              </a>
             </div>
 
             <div className="promo-banner-visual">
@@ -1018,19 +1006,15 @@ export default function Home() {
                 <p className="trust-lede">
                   Quality diagnostics, careful collection, and clear reports — built around your confidence at every step.
                 </p>
-                <button
-                  type="button"
+                <a
+                  href={whatsappUrl}
                   className="btn btn-primary btn-lg trust-cta"
-                  onClick={() =>
-                    openInquiryModal({
-                      subject: 'Book a Test',
-                      message: 'I would like to book a diagnostic test or health package. Please help me get started.',
-                    })
-                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
+                  <Zap size={18} strokeWidth={2.4} fill="currentColor" />
                   Book a Test
-                  <ArrowUpRight size={18} strokeWidth={2.5} />
-                </button>
+                </a>
               </header>
 
               <div className="trust-features">
@@ -1223,22 +1207,23 @@ export default function Home() {
                 </p>
               </div>
               <div className="cta-banner-actions">
-                <button
-                  type="button"
+                <a
+                  href={whatsappUrl}
                   className="btn btn-primary btn-lg"
-                  onClick={() =>
-                    openInquiryModal({
-                      subject: 'Booking Inquiry',
-                      message: 'Please help me book a home collection appointment.',
-                    })
-                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
+                  <Zap size={17} strokeWidth={2.4} fill="currentColor" />
                   Book Test Now
-                  <ArrowUpRight size={16} strokeWidth={2.75} />
-                </button>
-                <a href="tel:+919998880005" className="btn btn-secondary-light btn-lg">
-                  <Phone size={15} strokeWidth={2.25} />
-                  Call us
+                </a>
+                <a
+                  href={whatsappUrl}
+                  className="btn btn-secondary-light btn-lg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <WhatsAppIcon size={18} variant="inverse" />
+                  WhatsApp Us
                 </a>
               </div>
             </div>

@@ -3536,6 +3536,12 @@
   box-shadow: 0 14px 28px rgba(10, 24, 58, 0.22);
 }
 
+.promo-banner-cta svg {
+  color: #FACC15;
+  fill: #FACC15;
+  flex-shrink: 0;
+}
+
 .promo-banner-visual {
   position: absolute;
   right: 120px;

@@ -460,6 +460,11 @@
     color: #fff !important;
   }
 
+  .nav-mobile-quick svg {
+    color: #FACC15;
+    fill: #FACC15;
+  }
+
   .nav-mobile-register {
     background: var(--primary) !important;
     color: #fff !important;

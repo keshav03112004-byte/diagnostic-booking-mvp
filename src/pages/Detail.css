@@ -316,11 +316,19 @@
 .sidebar-book-btn {
   width: 100%;
   margin-bottom: 0.65rem;
+  text-align: center;
 }
 
 .sidebar-quick-btn {
   width: 100%;
   text-align: center;
+  overflow: visible;
+}
+
+.sidebar-quick-btn .whatsapp-icon {
+  flex-shrink: 0;
+  display: block;
+  overflow: visible;
 }
 
 /* FAQ */

@@ -1,25 +1,13 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { Zap } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
+import { getWhatsAppUrl, getBookingWhatsAppMessage } from '../utils/whatsapp';
 
 export default function BookingSidebar({ item, itemType }) {
-  const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
-
   const discount = item.originalPrice
     ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)
     : 0;
 
-  const handleAdd = () => {
-    addItem({
-      itemType,
-      itemId: item._id,
-      name: item.name,
-      price: item.price,
-    });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
-  };
+  const whatsappUrl = getWhatsAppUrl(getBookingWhatsAppMessage(item, itemType));
 
   return (
     <div className="booking-sidebar card">
@@ -76,15 +64,24 @@ export default function BookingSidebar({ item, itemType }) {
         <span>✓ Free report counselling</span>
       </div>
 
-      <button type="button" className="btn btn-primary btn-lg sidebar-book-btn" onClick={handleAdd}>
-        {added ? '✓ Added to Cart' : 'Book Now'}
-      </button>
-      <Link
-        to={`/book/quick?type=${itemType}&id=${item._id}&name=${encodeURIComponent(item.name)}&price=${item.price}`}
-        className="btn btn-outline sidebar-quick-btn"
+      <a
+        href={whatsappUrl}
+        className="btn btn-primary btn-lg sidebar-book-btn"
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        Quick Book
-      </Link>
+        <Zap size={18} strokeWidth={2.4} fill="currentColor" />
+        Book Now
+      </a>
+      <a
+        href={whatsappUrl}
+        className="btn btn-outline sidebar-quick-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <WhatsAppIcon size={18} />
+        WhatsApp Us
+      </a>
     </div>
   );
 }

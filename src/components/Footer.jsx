@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, Zap } from 'lucide-react';
 import Logo from './Logo';
-import { useInquiryModal } from '../context/InquiryModalContext';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 import './Footer.css';
 
 export default function Footer() {
-  const { openInquiryModal } = useInquiryModal();
+  const whatsappUrl = getWhatsAppUrl();
 
   return (
     <footer className="footer">
@@ -34,31 +34,15 @@ export default function Footer() {
               <nav className="footer-links" aria-label="Quick links">
                 <Link to="/tests">All Tests</Link>
                 <Link to="/packages">Health Packages</Link>
-                <button
-                  type="button"
-                  className="footer-link-btn"
-                  onClick={() =>
-                    openInquiryModal({
-                      subject: 'Booking Inquiry',
-                      message: 'I would like help booking a diagnostic test or package.',
-                    })
-                  }
-                >
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="footer-whatsapp-link">
+                  <Zap size={14} strokeWidth={2.4} fill="currentColor" />
                   Quick Book
-                </button>
+                </a>
                 <Link to="/contact">Contact Us</Link>
-                <button
-                  type="button"
-                  className="footer-link-btn"
-                  onClick={() =>
-                    openInquiryModal({
-                      subject: 'Book a Test',
-                      message: 'I would like to book a diagnostic test or health package. Please help me get started.',
-                    })
-                  }
-                >
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="footer-whatsapp-link">
+                  <Zap size={14} strokeWidth={2.4} fill="currentColor" />
                   Book a Test
-                </button>
+                </a>
               </nav>
             </div>
 

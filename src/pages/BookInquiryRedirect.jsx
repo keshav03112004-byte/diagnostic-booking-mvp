@@ -1,23 +1,19 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useInquiryModal } from '../context/InquiryModalContext';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
-/** Legacy /login and /register URLs open the book-test inquiry instead of auth forms. */
+/** Legacy /login and /register URLs open WhatsApp booking instead of auth forms. */
 export default function BookInquiryRedirect() {
-  const { openInquiryModal } = useInquiryModal();
   const navigate = useNavigate();
 
   useEffect(() => {
-    openInquiryModal({
-      subject: 'Book a Test',
-      message: 'I would like to book a diagnostic test or health package. Please help me get started.',
-    });
+    window.open(getWhatsAppUrl(), '_blank', 'noopener,noreferrer');
     navigate('/', { replace: true });
-  }, [openInquiryModal, navigate]);
+  }, [navigate]);
 
   return (
     <div className="loading">
-      Opening booking inquiry...
+      Opening WhatsApp...
     </div>
   );
 }

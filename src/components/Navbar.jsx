@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { useInquiryModal } from '../context/InquiryModalContext';
-import { ShoppingCart, Zap, Phone, Menu, X } from 'lucide-react';
+import { ShoppingCart, Phone, Menu, X, Zap } from 'lucide-react';
 import Logo from './Logo';
 import NavSearch from './NavSearch';
+import { openWhatsApp } from '../utils/whatsapp';
 import './Navbar.css';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const { count } = useCart();
-  const { openInquiryModal } = useInquiryModal();
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -50,10 +49,7 @@ export default function Navbar() {
 
   const openQuickBook = () => {
     setMenuOpen(false);
-    openInquiryModal({
-      subject: 'Booking Inquiry',
-      message: 'I would like help booking a diagnostic test or package.',
-    });
+    openWhatsApp();
   };
 
   return (
@@ -82,7 +78,7 @@ export default function Navbar() {
       >
         <div className="container navbar-inner">
           <Link to="/" className="logo" aria-label="energex.life home">
-            <Logo height={40} />
+            <Logo height={52} />
             <span className="logo-slogan" aria-hidden="true">
               better health. <span>better life</span>
             </span>
@@ -93,7 +89,7 @@ export default function Navbar() {
             <Link to="/tests">Tests</Link>
             <Link to="/packages">Packages</Link>
             <button type="button" className="nav-quick" onClick={openQuickBook}>
-              <Zap size={14} color="#FACC15" strokeWidth={2.5} fill="#FACC15" />
+              <Zap size={15} strokeWidth={2.4} fill="currentColor" />
               Quick Book
             </button>
           </nav>
@@ -155,7 +151,7 @@ export default function Navbar() {
                 Contact
               </Link>
               <button type="button" className="nav-mobile-quick" onClick={openQuickBook}>
-                <Zap size={15} color="#FACC15" strokeWidth={2.5} fill="#FACC15" />
+                <Zap size={15} strokeWidth={2.4} fill="currentColor" />
                 Quick Book
               </button>
               {isAuthenticated ? (
