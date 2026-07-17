@@ -345,6 +345,109 @@ a {
   position: relative;
 }
 
+/* Listing filters */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-search-field {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.2rem 0.2rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-search-field:focus-within {
+  border-color: rgba(var(--primary-rgb), 0.45);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12);
+}
+
+.filter-search-field .filter-search {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.filter-search-field .filter-search::placeholder {
+  color: #94a3b8;
+}
+
+.filter-search-field .filter-search[type='search']::-webkit-search-decoration,
+.filter-search-field .filter-search[type='search']::-webkit-search-cancel-button {
+  display: none;
+}
+
+.filter-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  height: 34px;
+  padding: 0 0.9rem;
+  border: none;
+  border-radius: 7px;
+  background: var(--secondary);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.filter-search-btn:hover {
+  background: var(--accent);
+}
+
+.filter-search-btn:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 480px) {
+  .filter-search-btn span {
+    display: none;
+  }
+
+  .filter-search-btn {
+    width: 34px;
+    padding: 0;
+  }
+}
+
+.filter-search {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.filters select {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  min-width: 160px;
+  background: #fff;
+}
+
 /* Alerts */
 .alert {
   padding: 0.85rem 1.15rem;

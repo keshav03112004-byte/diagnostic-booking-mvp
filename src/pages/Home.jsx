@@ -5,15 +5,14 @@ import TestCard from '../components/TestCard';
 import PackageCard from '../components/PackageCard';
 import DiseaseCard from '../components/DiseaseCard';
 import PincodeChecker from '../components/PincodeChecker';
-import HeroSearch from '../components/HeroSearch';
 import FloatingCTA from '../components/FloatingCTA';
 import CtaBubbleBackground from '../components/CtaBubbleBackground';
+import FAQAccordion from '../components/FAQAccordion';
+import ScrollReveal from '../components/ScrollReveal';
 import { useInquiryModal } from '../context/InquiryModalContext';
-import { siteConfig, heroStats as defaultStats, heroTags as defaultTags, heroVideo as defaultVideo } from '../config/siteConfig';
-import { cmsAPI } from '../api/api';
+import { siteConfig, heroStats, heroTags } from '../config/siteConfig';
 import {
   Activity,
-  Package,
   Zap,
   Compass,
   Droplet,
@@ -34,7 +33,6 @@ import {
   ClipboardList,
   Clock,
   FileText,
-  Sparkles,
   BadgeCheck,
   Syringe,
   IndianRupee,
@@ -43,60 +41,6 @@ import {
 import { motion } from 'motion/react';
 import '../components/cards.css';
 import './Home.css';
-
-const VALUE_PROPS = [
-  {
-    key: 'home',
-    badge: 'Home Collection',
-    title: 'Free Home Collection',
-    desc: 'Within 60 minutes of booking*',
-  },
-  {
-    key: 'reports',
-    badge: 'Digital Reports',
-    title: 'Smart Digital Reports',
-    desc: 'Real-time tracking & delivery',
-  },
-  {
-    key: 'counsel',
-    badge: 'Counselling',
-    title: 'Free Report Counselling',
-    desc: 'Expert guidance on your results',
-  },
-];
-
-const REPORT_MARKERS = [
-  { name: 'Hemoglobin', value: '13.8 g/dL', position: 62, status: 'In Range' },
-  { name: 'Glucose', value: '92 mg/dL', position: 48, status: 'In Range' },
-  { name: 'Vitamin D', value: '38 ng/mL', position: 55, status: 'In Range' },
-];
-
-const COUNSEL_ITEMS = [
-  {
-    icon: MessageSquare,
-    tone: 'teal',
-    title: 'Result walkthrough',
-    detail: 'Doctor-led review of every marker',
-  },
-  {
-    icon: FileText,
-    tone: 'blue',
-    title: 'Actionable next steps',
-    detail: 'Clear plan tailored to your report',
-  },
-  {
-    icon: Sparkles,
-    tone: 'amber',
-    title: 'Lifestyle guidance',
-    detail: 'Diet & habits matched to your labs',
-  },
-  {
-    icon: Phone,
-    tone: 'green',
-    title: 'Follow-up support',
-    detail: 'Ask questions anytime after booking',
-  },
-];
 
 const CONCERN_TABS = [
   {
@@ -117,6 +61,39 @@ const CONCERN_TABS = [
 ];
 
 const HOW_IT_WORKS_CYCLE_MS = 9000;
+
+const HOME_FAQS = [
+  {
+    question: 'Do you offer home sample collection?',
+    answer:
+      'Yes. A certified phlebotomist visits your doorstep at your chosen slot. Home collection is available across our serviceable pincodes.',
+  },
+  {
+    question: 'How soon will I get my reports?',
+    answer:
+      'Most reports are delivered digitally within 24 hours. You’ll get a secure link by SMS and email as soon as results are ready.',
+  },
+  {
+    question: 'Are the labs accredited?',
+    answer:
+      'We partner with NABL-accredited laboratories for testing quality and reliability. Every sample is handled with chain-of-custody care.',
+  },
+  {
+    question: 'Can I book without creating an account?',
+    answer:
+      'Yes. Use Quick Book or send a booking inquiry — no account is required. Our team will confirm your slot and guide you through the rest.',
+  },
+  {
+    question: 'Is report counselling included?',
+    answer:
+      'Yes. Free report counselling is available so you can understand your markers and next steps with clear, practical guidance.',
+  },
+  {
+    question: 'Which areas do you currently serve?',
+    answer:
+      'We currently serve Gurgaon, Delhi NCR, and Bangalore. Enter your pincode on the site to confirm home collection availability.',
+  },
+];
 
 const HOW_IT_WORKS_STEPS = [
   {
@@ -154,11 +131,11 @@ const SERVICE_TILES = [
     borderColor: 'rgba(var(--primary-rgb), 0.1)'
   },
   { 
-    icon: Package, 
-    title: 'Curated Health Packages', 
-    desc: 'Comprehensive full-body checkup panels customized for your lifestyle.',
-    offer: 'Best Value Deals', 
-    link: '/packages', 
+    icon: HomeIcon, 
+    title: 'Free Sample Collections', 
+    desc: 'Complimentary home sample collection with every booking — certified phlebotomists at your doorstep.',
+    offer: 'Always Free', 
+    link: '/book/quick', 
     color: 'var(--accent)',
     bgColor: 'rgba(var(--accent-rgb), 0.04)',
     borderColor: 'rgba(var(--accent-rgb), 0.1)'
@@ -224,9 +201,9 @@ const brandIconProps = { size: 14, color: 'var(--primary)', strokeWidth: 2.25 };
 
 const getTagIcon = (tag) => {
   const t = tag.toLowerCase();
-  if (t.includes('blood')) return <Droplet {...brandIconProps} />;
+  if (t.includes('blood') || t.includes('lab')) return <Droplet {...brandIconProps} />;
   if (t.includes('body') || t.includes('checkup')) return <User {...brandIconProps} />;
-  if (t.includes('home') || t.includes('collection')) return <HomeIcon {...brandIconProps} />;
+  if (t.includes('home') || t.includes('collection') || t.includes('sample')) return <HomeIcon {...brandIconProps} />;
   if (t.includes('counselling') || t.includes('chat') || t.includes('free')) return <MessageSquare {...brandIconProps} />;
   return null;
 };
@@ -235,19 +212,16 @@ export default function Home() {
   const { openInquiryModal } = useInquiryModal();
   const [popularTests, setPopularTests] = useState([]);
   const [popularPackages, setPopularPackages] = useState([]);
-  const [allTests, setAllTests] = useState([]);
-  const [allPackages, setAllPackages] = useState([]);
   const [diseases, setDiseases] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [hero, setHero] = useState({
+  const hero = {
     badge: siteConfig.badge,
     tagline: siteConfig.tagline,
     taglineHighlight: siteConfig.taglineHighlight,
     description: siteConfig.description,
-    heroVideo: defaultVideo,
-    heroStats: defaultStats,
-    heroTags: defaultTags,
-  });
+    heroStats,
+    heroTags,
+  };
   const howWorksRef = useRef(null);
   const howCycleStartRef = useRef(Date.now());
   const howLineFillRef = useRef(null);
@@ -505,31 +479,29 @@ export default function Home() {
   }, [howInView]);
 
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
+
+  useEffect(() => {
+    const empty = { data: {} };
     Promise.all([
-      testAPI.getPopular(),
-      packageAPI.getPopular(),
-      testAPI.getAll(),
-      packageAPI.getAll(),
-      diseaseAPI.getAll(),
-      cmsAPI.getHero().catch(() => null),
+      testAPI.getPopular().catch(() => empty),
+      packageAPI.getPopular().catch(() => empty),
+      testAPI.getAll().catch(() => empty),
+      packageAPI.getAll().catch(() => empty),
+      diseaseAPI.getAll().catch(() => empty),
     ])
-      .then(([popularTestsRes, popularPackagesRes, allTestsRes, allPackagesRes, diseasesRes, heroRes]) => {
-        setPopularTests(popularTestsRes.data.tests || []);
-        setPopularPackages(popularPackagesRes.data.packages || []);
-        setAllTests(allTestsRes.data.tests || []);
-        setAllPackages(allPackagesRes.data.packages || []);
+      .then(([popularTestsRes, popularPackagesRes, allTestsRes, allPackagesRes, diseasesRes]) => {
+        const allTestsData = allTestsRes.data.tests || [];
+        const allPackagesData = allPackagesRes.data.packages || [];
+        const popularTestsData = popularTestsRes.data.tests || [];
+        const popularPackagesData = popularPackagesRes.data.packages || [];
+        setPopularTests(popularTestsData.length ? popularTestsData : allTestsData.slice(0, 8));
+        setPopularPackages(popularPackagesData.length ? popularPackagesData : allPackagesData.slice(0, 4));
         setDiseases(diseasesRes.data.diseases || []);
-        if (heroRes?.data) {
-          setHero({
-            badge: heroRes.data.badge,
-            tagline: heroRes.data.tagline,
-            taglineHighlight: heroRes.data.taglineHighlight,
-            description: heroRes.data.description,
-            heroVideo: heroRes.data.heroVideo,
-            heroStats: heroRes.data.heroStats,
-            heroTags: heroRes.data.heroTags,
-          });
-        }
       })
       .catch((err) => {
         console.error('Failed to load home data:', err?.message || err);
@@ -559,10 +531,10 @@ export default function Home() {
   };
 
   const heroStatLabelIconMap = {
-    'Lab Tests': FlaskConical,
-    'Health Packages': ClipboardList,
+    'Sample Collection': HomeIcon,
     'Report Delivery': Clock,
     'Home Collection': HomeIcon,
+    'Lab Tests': FlaskConical,
   };
 
   return (
@@ -623,43 +595,9 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="hero-search-wrap">
-              <HeroSearch tests={allTests} packages={allPackages} />
-            </div>
-
             <div className="hero-secure-badge">
               <ShieldCheck size={16} color="var(--primary)" strokeWidth={2.25} />
               <span>Your data is secure & confidential</span>
-            </div>
-
-            <div className="hero-inline-stats">
-              {hero.heroStats.map((stat) => {
-                const Icon =
-                  heroStatIconMap[stat.icon]
-                  || heroStatLabelIconMap[stat.label]
-                  || Activity;
-                const toneClass =
-                  stat.label === 'Lab Tests'
-                    ? 'tone-tests'
-                    : stat.label === 'Health Packages'
-                      ? 'tone-packages'
-                      : stat.label === 'Report Delivery'
-                        ? 'tone-report'
-                        : stat.label === 'Home Collection'
-                          ? 'tone-home'
-                          : 'tone-tests';
-                return (
-                  <article key={stat.label} className="hero-inline-stat">
-                    <span className={`hero-inline-stat-icon ${toneClass}`.trim()} aria-hidden="true">
-                      <Icon size={13} strokeWidth={2} />
-                    </span>
-                    <div className="hero-inline-stat-copy">
-                      <strong>{stat.value}</strong>
-                      <span>{stat.label}</span>
-                    </div>
-                  </article>
-                );
-              })}
             </div>
           </div>
 
@@ -670,291 +608,50 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="hero-product-stage">
-              <img
-                src="/images/hero-visual.png"
-                alt="Doctor consultation with at-home blood test insights and activity scores"
-                className="hero-product-image"
-                width={483}
-                height={519}
-                decoding="async"
-                fetchPriority="high"
-              />
+              <div className="hero-product-frame">
+                <img
+                  src="/images/hero-visual.png"
+                  alt="Friendly phlebotomist collecting a blood sample from a relaxed patient at home"
+                  className="hero-product-image"
+                  width={483}
+                  height={519}
+                  decoding="async"
+                  fetchPriority="high"
+                />
+
+                <div className="hero-inline-stats hero-inline-stats-on-visual">
+                  {hero.heroStats.map((stat) => {
+                    const Icon =
+                      heroStatIconMap[stat.icon]
+                      || heroStatLabelIconMap[stat.label]
+                      || Activity;
+                    const toneClass =
+                      stat.label === 'Sample Collection' || stat.label === 'Home Collection'
+                        ? 'tone-home'
+                        : stat.label === 'Report Delivery'
+                          ? 'tone-report'
+                          : 'tone-tests';
+                    return (
+                      <article key={stat.label} className="hero-inline-stat">
+                        <span className={`hero-inline-stat-icon ${toneClass}`.trim()} aria-hidden="true">
+                          <Icon size={15} strokeWidth={2} />
+                        </span>
+                        <div className="hero-inline-stat-copy">
+                          <strong>{stat.value}</strong>
+                          <span>{stat.label}</span>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Why book — insight cards */}
-      <section className="section section-value-strip">
-        <div className="container value-insights">
-          <header className="value-insights-header">
-            <h2 className="value-insights-title">
-              Why book with <em>energex.life</em>
-            </h2>
-          </header>
-
-          <div className="value-insights-grid">
-            {/* Card 1 — Free Home Collection */}
-            <article className="value-insight-card tone-mint">
-              <span className="value-insight-badge">{VALUE_PROPS[0].badge}</span>
-              <h3 className="value-insight-heading">{VALUE_PROPS[0].title}</h3>
-              <div className="value-insight-photo-wrap">
-                <img
-                  src="/images/value-home-collection.png"
-                  alt="Phlebotomist collecting a blood sample during a free home visit"
-                  className="value-insight-photo"
-                  width={480}
-                  height={560}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="value-insight-overlay">
-                  <span className="value-insight-overlay-icon" aria-hidden="true">
-                    <HomeIcon size={16} strokeWidth={2.1} />
-                  </span>
-                  <div className="value-insight-overlay-copy">
-                    <strong>At-home sample pickup</strong>
-                    <span>{VALUE_PROPS[0].desc}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="value-insight-overlay-cta"
-                    onClick={() =>
-                      openInquiryModal({
-                        subject: 'Home Collection Booking',
-                        message: 'I would like to book a free home sample collection.',
-                      })
-                    }
-                  >
-                    Book Pickup
-                  </button>
-                </div>
-              </div>
-            </article>
-
-            {/* Card 2 — Smart Digital Reports */}
-            <article className="value-insight-card tone-slate">
-              <span className="value-insight-badge">{VALUE_PROPS[1].badge}</span>
-              <h3 className="value-insight-heading">{VALUE_PROPS[1].title}</h3>
-              <div className="value-report-phone">
-                <div className="value-report-phone-inner">
-                  <p className="value-report-kicker">You&apos;re doing great!</p>
-                  <p className="value-report-status">
-                    <span className="value-report-dot" />
-                    5 In Range
-                  </p>
-                  <ul className="value-report-metrics">
-                    {REPORT_MARKERS.map((marker) => (
-                      <li key={marker.name} className="value-report-metric">
-                        <div className="value-report-metric-top">
-                          <span>{marker.name}</span>
-                          <strong>{marker.value}</strong>
-                        </div>
-                        <div className="value-report-bar" aria-hidden="true">
-                          <span className="seg seg-low" />
-                          <span className="seg seg-mid" />
-                          <span className="seg seg-high" />
-                          <span
-                            className="value-report-marker"
-                            style={{ left: `${marker.position}%` }}
-                          />
-                        </div>
-                        <span className="value-report-range">{marker.status}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="value-report-footer">{VALUE_PROPS[1].desc}</p>
-                </div>
-              </div>
-            </article>
-
-            {/* Card 3 — Free Report Counselling */}
-            <article className="value-insight-card tone-mint">
-              <span className="value-insight-badge">{VALUE_PROPS[2].badge}</span>
-              <h3 className="value-insight-heading">{VALUE_PROPS[2].title}</h3>
-              <p className="value-insight-lede">{VALUE_PROPS[2].desc}</p>
-              <ul className="value-counsel-list">
-                {COUNSEL_ITEMS.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <li key={item.title} className="value-counsel-item">
-                      <span className={`value-counsel-icon tone-${item.tone}`} aria-hidden="true">
-                        <Icon size={15} strokeWidth={2} />
-                      </span>
-                      <div className="value-counsel-copy">
-                        <strong>{item.title}</strong>
-                        <span>{item.detail}</span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      {/* Service tiles — bento layout (content unchanged) */}
-      <section className="section modern-service-tiles-section">
-        <div className="services-bento-glow" aria-hidden="true" />
-        <div className="container services-bento-inner">
-          <header className="modern-tiles-header">
-            <div className="modern-tiles-header-copy">
-              <span className="modern-tiles-tagline">INTEGRATED DIAGNOSTICS</span>
-              <h2 className="modern-tiles-title">
-                Precision Diagnostic <em>Ecosystem</em>
-              </h2>
-            </div>
-            <p className="modern-tiles-subtitle">
-              Seamlessly bridge the gap between advanced pathology instrumentation and the comfort of your home.
-            </p>
-          </header>
-
-          <div className="services-bento-grid">
-            {/* Featured — Individual Blood Tests */}
-            <Link
-              to={SERVICE_TILES[0].link}
-              className="bento-card bento-feature"
-            >
-              <div
-                className="bento-card-media"
-                style={{ backgroundImage: "url('/images/bento-blood-tests.png')" }}
-                aria-hidden="true"
-              />
-              <div className="bento-card-veil bento-card-veil-dark" aria-hidden="true" />
-              <div className="bento-feature-content">
-                <span className="bento-pill bento-pill-glass">{SERVICE_TILES[0].offer}</span>
-                <h3>{SERVICE_TILES[0].title}</h3>
-                <p>{SERVICE_TILES[0].desc}</p>
-                <span className="bento-cta">
-                  Explore pathway
-                  <ArrowUpRight size={16} strokeWidth={2.5} />
-                </span>
-              </div>
-            </Link>
-
-            {/* Health Packages */}
-            <Link
-              to={SERVICE_TILES[1].link}
-              className="bento-card bento-packages"
-            >
-              <div
-                className="bento-card-media"
-                style={{ backgroundImage: "url('/images/bento-packages.png')" }}
-                aria-hidden="true"
-              />
-              <div className="bento-card-veil bento-card-veil-teal" aria-hidden="true" />
-              <div className="bento-card-top">
-                <span className="bento-pill bento-pill-glass">{SERVICE_TILES[1].offer}</span>
-                <Package size={22} strokeWidth={1.75} className="bento-corner-icon" />
-              </div>
-              <div className="bento-card-copy">
-                <h3>{SERVICE_TILES[1].title}</h3>
-                <p>{SERVICE_TILES[1].desc}</p>
-              </div>
-            </Link>
-
-            {/* Browse by Health Concerns */}
-            <Link
-              to={SERVICE_TILES[3].link}
-              className="bento-card bento-concern"
-            >
-              <div
-                className="bento-card-media"
-                style={{ backgroundImage: "url('/images/bento-concerns.png')" }}
-                aria-hidden="true"
-              />
-              <div className="bento-card-veil bento-card-veil-navy" aria-hidden="true" />
-              <Compass size={22} strokeWidth={1.75} className="bento-corner-icon" />
-              <div className="bento-card-copy">
-                <h3>{SERVICE_TILES[3].title}</h3>
-                <p>{SERVICE_TILES[3].desc}</p>
-              </div>
-            </Link>
-
-            {/* Quick Book */}
-            <button
-              type="button"
-              className="bento-card bento-quick"
-              onClick={() =>
-                openInquiryModal({
-                  subject: 'Quick Book Inquiry',
-                  message: 'I want to upload a prescription or list tests for home collection.',
-                })
-              }
-            >
-              <div
-                className="bento-card-media"
-                style={{ backgroundImage: "url('/images/bento-quick-book.png')" }}
-                aria-hidden="true"
-              />
-              <div className="bento-card-veil bento-card-veil-sky" aria-hidden="true" />
-              <Zap size={22} strokeWidth={1.75} className="bento-corner-icon" />
-              <div className="bento-card-copy">
-                <h3>{SERVICE_TILES[2].title}</h3>
-                <p>{SERVICE_TILES[2].desc}</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Promo care banner */}
-      <section className="section section-promo-banner">
-        <div className="container">
-          <div className="promo-banner">
-            <div className="promo-banner-waves" aria-hidden="true">
-              <svg className="promo-banner-wave promo-banner-wave-1" viewBox="0 0 800 400" preserveAspectRatio="none">
-                <path
-                  d="M0 280 C 160 200, 280 340, 420 250 C 560 160, 680 300, 800 220 L 800 400 L 0 400 Z"
-                  fill="currentColor"
-                />
-              </svg>
-              <svg className="promo-banner-wave promo-banner-wave-2" viewBox="0 0 800 400" preserveAspectRatio="none">
-                <path
-                  d="M0 320 C 180 240, 320 360, 480 280 C 620 200, 720 320, 800 260 L 800 400 L 0 400 Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div>
-
-            <div className="promo-banner-copy">
-              <h2 className="promo-banner-title">energex.life</h2>
-              <p className="promo-banner-desc">
-                At energex.life, we are committed to providing exceptional diagnostic care with a focus on quality, trust, and innovation.
-              </p>
-              <button
-                type="button"
-                className="promo-banner-cta"
-                onClick={() =>
-                  openInquiryModal({
-                    subject: 'Booking Inquiry',
-                    message: 'I would like to book a diagnostic test with expert guidance.',
-                  })
-                }
-              >
-                Book Test Now
-                <ArrowRight size={16} strokeWidth={2.5} />
-              </button>
-            </div>
-
-            <div className="promo-banner-visual">
-              <img
-                src="/images/promo-doctor.png"
-                alt="Doctor ready to guide your diagnostic booking"
-                className="promo-banner-doctor"
-                width={420}
-                height={520}
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Popular Tests — Most Booked */}
-      <section className="section section-popular-tests">
+      <ScrollReveal as="section" className="section section-popular-tests">
         <div className="popular-tests-glow" aria-hidden="true" />
         <div className="container popular-tests-inner">
           <header className="popular-tests-header">
@@ -1022,10 +719,169 @@ export default function Home() {
             )}
           </div>
         </div>
-      </section>
+      </ScrollReveal>
+
+      {/* Service tiles — bento layout (content unchanged) */}
+      <ScrollReveal as="section" className="section modern-service-tiles-section" delay={0.04}>
+        <div className="services-bento-glow" aria-hidden="true" />
+        <div className="container services-bento-inner">
+          <header className="modern-tiles-header">
+            <div className="modern-tiles-header-copy">
+              <span className="modern-tiles-tagline">INTEGRATED DIAGNOSTICS</span>
+              <h2 className="modern-tiles-title">
+                Precision Diagnostic <em>Ecosystem</em>
+              </h2>
+            </div>
+            <p className="modern-tiles-subtitle">
+              Seamlessly bridge the gap between advanced pathology instrumentation and the comfort of your home.
+            </p>
+          </header>
+
+          <div className="services-bento-grid">
+            {/* Featured — Individual Blood Tests */}
+            <Link
+              to={SERVICE_TILES[0].link}
+              className="bento-card bento-feature"
+            >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-blood-tests.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-dark" aria-hidden="true" />
+              <div className="bento-feature-content">
+                <span className="bento-pill bento-pill-glass">{SERVICE_TILES[0].offer}</span>
+                <h3>{SERVICE_TILES[0].title}</h3>
+                <p>{SERVICE_TILES[0].desc}</p>
+                <span className="bento-cta">
+                  Explore pathway
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </span>
+              </div>
+            </Link>
+
+            {/* Free Sample Collections */}
+            <Link
+              to={SERVICE_TILES[1].link}
+              className="bento-card bento-packages"
+            >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-packages.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-teal" aria-hidden="true" />
+              <div className="bento-card-top">
+                <span className="bento-pill bento-pill-glass">{SERVICE_TILES[1].offer}</span>
+                <HomeIcon size={22} strokeWidth={1.75} className="bento-corner-icon" />
+              </div>
+              <div className="bento-card-copy">
+                <h3>{SERVICE_TILES[1].title}</h3>
+                <p>{SERVICE_TILES[1].desc}</p>
+              </div>
+            </Link>
+
+            {/* Browse by Health Concerns */}
+            <Link
+              to={SERVICE_TILES[3].link}
+              className="bento-card bento-concern"
+            >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-concerns.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-navy" aria-hidden="true" />
+              <Compass size={22} strokeWidth={1.75} className="bento-corner-icon" />
+              <div className="bento-card-copy">
+                <h3>{SERVICE_TILES[3].title}</h3>
+                <p>{SERVICE_TILES[3].desc}</p>
+              </div>
+            </Link>
+
+            {/* Quick Book */}
+            <button
+              type="button"
+              className="bento-card bento-quick"
+              onClick={() =>
+                openInquiryModal({
+                  subject: 'Quick Book Inquiry',
+                  message: 'I want to upload a prescription or list tests for home collection.',
+                })
+              }
+            >
+              <div
+                className="bento-card-media"
+                style={{ backgroundImage: "url('/images/bento-quick-book.png')" }}
+                aria-hidden="true"
+              />
+              <div className="bento-card-veil bento-card-veil-sky" aria-hidden="true" />
+              <Zap size={22} strokeWidth={1.75} className="bento-corner-icon" />
+              <div className="bento-card-copy">
+                <h3>{SERVICE_TILES[2].title}</h3>
+                <p>{SERVICE_TILES[2].desc}</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </ScrollReveal>
+
+      {/* Promo care banner */}
+      <ScrollReveal as="section" className="section section-promo-banner" delay={0.05}>
+        <div className="container">
+          <div className="promo-banner">
+            <div className="promo-banner-waves" aria-hidden="true">
+              <svg className="promo-banner-wave promo-banner-wave-1" viewBox="0 0 800 400" preserveAspectRatio="none">
+                <path
+                  d="M0 280 C 160 200, 280 340, 420 250 C 560 160, 680 300, 800 220 L 800 400 L 0 400 Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <svg className="promo-banner-wave promo-banner-wave-2" viewBox="0 0 800 400" preserveAspectRatio="none">
+                <path
+                  d="M0 320 C 180 240, 320 360, 480 280 C 620 200, 720 320, 800 260 L 800 400 L 0 400 Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+
+            <div className="promo-banner-copy">
+              <h2 className="promo-banner-title">energex.life</h2>
+              <p className="promo-banner-desc">
+                At energex.life, we are committed to providing exceptional diagnostic care with a focus on quality, trust, and innovation.
+              </p>
+              <button
+                type="button"
+                className="promo-banner-cta"
+                onClick={() =>
+                  openInquiryModal({
+                    subject: 'Booking Inquiry',
+                    message: 'I would like to book a diagnostic test with expert guidance.',
+                  })
+                }
+              >
+                Book Test Now
+                <ArrowRight size={16} strokeWidth={2.5} />
+              </button>
+            </div>
+
+            <div className="promo-banner-visual">
+              <img
+                src="/images/promo-doctor.png"
+                alt="Doctor ready to guide your diagnostic booking"
+                className="promo-banner-doctor"
+                width={420}
+                height={520}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+        </div>
+      </ScrollReveal>
 
       {/* Popular Packages — Full Body Checkups */}
-      <section className="section section-packages">
+      <ScrollReveal as="section" className="section section-packages">
         <div className="packages-glow" aria-hidden="true" />
         <div className="container packages-inner">
           <header className="packages-header">
@@ -1055,10 +911,10 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
 
       {/* Browse by disease / concern */}
-      <section className="section section-concerns" id="concerns">
+      <ScrollReveal as="section" className="section section-concerns" id="concerns">
         <div className="concerns-glow" aria-hidden="true" />
         <div className="container concerns-inner">
           <header className="concerns-header">
@@ -1146,10 +1002,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
 
       {/* Trust section */}
-      <section className="section section-trust">
+      <ScrollReveal as="section" className="section section-trust">
         <div className="trust-glow" aria-hidden="true" />
         <div className="container trust-inner">
           <div className="trust-board">
@@ -1162,10 +1018,19 @@ export default function Home() {
                 <p className="trust-lede">
                   Quality diagnostics, careful collection, and clear reports — built around your confidence at every step.
                 </p>
-                <Link to="/register" className="btn btn-primary btn-lg trust-cta">
-                  Get Started Free
+                <button
+                  type="button"
+                  className="btn btn-primary btn-lg trust-cta"
+                  onClick={() =>
+                    openInquiryModal({
+                      subject: 'Book a Test',
+                      message: 'I would like to book a diagnostic test or health package. Please help me get started.',
+                    })
+                  }
+                >
+                  Book a Test
                   <ArrowUpRight size={18} strokeWidth={2.5} />
-                </Link>
+                </button>
               </header>
 
               <div className="trust-features">
@@ -1213,12 +1078,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
 
       {/* How it works — image-matched layout */}
       <section className="section section-how-it-works" ref={howWorksRef}>
         <div className="how-works-glow" aria-hidden="true" />
-        <div className="container">
+        <ScrollReveal className="container">
           <header className="how-section-header">
             <span className="how-eyebrow">Simple Steps</span>
             <h2 className="how-process-title">
@@ -1326,11 +1191,11 @@ export default function Home() {
               })}
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* CTA Banner */}
-      <section className="section cta-banner">
+      <ScrollReveal as="section" className="section cta-banner">
         <div className="container">
           <div
             className="cta-banner-panel"
@@ -1379,7 +1244,22 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </ScrollReveal>
+
+      <ScrollReveal as="section" className="section section-home-faq" aria-labelledby="home-faq-title">
+        <div className="container home-faq-inner">
+          <header className="home-faq-header">
+            <span className="home-faq-eyebrow">FAQs</span>
+            <h2 id="home-faq-title" className="home-faq-title">
+              Questions, <em>answered</em>
+            </h2>
+            <p className="home-faq-lede">
+              Everything you need to know about booking, home collection, and reports.
+            </p>
+          </header>
+          <FAQAccordion faqs={HOME_FAQS} />
+        </div>
+      </ScrollReveal>
 
       <FloatingCTA />
     </>

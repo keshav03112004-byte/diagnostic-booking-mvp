@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 import { adminAPI } from '../../api/api';
 import './AdminLayout.css';
 import './adminExtras.css';
@@ -31,6 +32,11 @@ export default function AdminBookings() {
   useEffect(() => {
     load();
   }, [status, paymentStatus]);
+
+  const submitSearch = (e) => {
+    e.preventDefault();
+    load();
+  };
 
   const openBooking = (booking) => {
     setSelected(booking);
@@ -67,16 +73,21 @@ export default function AdminBookings() {
         <p>Track home collection orders, status, and payments</p>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search order / name / mobile"
-          style={{ minWidth: 220 }}
-        />
-        <button type="button" className="btn btn-secondary btn-sm" onClick={load}>
-          Search
-        </button>
+      <div className="admin-card admin-filters-row">
+        <form className="filter-search-field" onSubmit={submitSearch} role="search">
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search order / name / mobile"
+            className="filter-search"
+            aria-label="Search bookings"
+          />
+          <button type="submit" className="filter-search-btn" aria-label="Search bookings">
+            <Search size={15} strokeWidth={2.5} aria-hidden="true" />
+            <span>Search</span>
+          </button>
+        </form>
         <select value={status} onChange={(e) => setStatus(e.target.value)} className="filter-select">
           <option value="">All statuses</option>
           {STATUS_OPTIONS.map((s) => (

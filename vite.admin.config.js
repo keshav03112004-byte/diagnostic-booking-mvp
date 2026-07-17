@@ -13,11 +13,11 @@ export default defineConfig({
     open: '/admin/login',
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:3076',
         changeOrigin: true,
       },
       '/uploads': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:3076',
         changeOrigin: true,
       },
     },

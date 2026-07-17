@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { packageAPI, diseaseAPI } from '../api/api';
 import PackageCard from '../components/PackageCard';
 import '../components/cards.css';
@@ -10,6 +11,7 @@ export default function Packages() {
   const [diseases, setDiseases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
   const [search, setSearch] = useState('');
   const disease = searchParams.get('disease') || '';
   const sort = searchParams.get('sort') || '';
@@ -35,6 +37,11 @@ export default function Packages() {
     setSearchParams(params);
   };
 
+  const submitSearch = (e) => {
+    e.preventDefault();
+    setSearch(query.trim());
+  };
+
   return (
     <>
       <div className="page-header">
@@ -46,13 +53,20 @@ export default function Packages() {
 
       <div className="container section">
         <div className="filters">
-          <input
-            type="search"
-            placeholder="Search packages..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="filter-search"
-          />
+          <form className="filter-search-field" onSubmit={submitSearch} role="search">
+            <input
+              type="search"
+              placeholder="Search packages..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="filter-search"
+              aria-label="Search packages"
+            />
+            <button type="submit" className="filter-search-btn" aria-label="Search packages">
+              <Search size={15} strokeWidth={2.5} aria-hidden="true" />
+              <span>Search</span>
+            </button>
+          </form>
           <select value={disease} onChange={(e) => updateFilter('disease', e.target.value)}>
             <option value="">All Categories</option>
             {diseases.map((d) => (

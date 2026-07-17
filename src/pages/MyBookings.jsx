@@ -20,7 +20,7 @@ export default function MyBookings() {
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate('/');
       return;
     }
 

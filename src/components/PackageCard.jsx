@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 import { ArrowUpRight } from 'lucide-react';
 
 function getPackageImage(name = '') {
@@ -31,45 +30,36 @@ function getPackageImage(name = '') {
 }
 
 export default function PackageCard({ pkg, variant = 'default' }) {
-  const { addItem } = useCart();
   const testCount = pkg.tests?.length || 0;
   const discount = pkg.originalPrice
     ? Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100)
     : 0;
   const isFeatured = variant === 'featured';
   const visual = getPackageImage(pkg.name);
-
-  const handleBook = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem({
-      itemType: 'package',
-      itemId: pkg._id,
-      name: pkg.name,
-      price: pkg.price,
-    });
-  };
+  const detailPath = `/packages/${pkg.slug}`;
 
   return (
     <article className={isFeatured ? 'premium-package-card' : 'premium-package-card is-light'}>
-      <div className="card-media">
-        <img
-          src={visual.src}
-          alt=""
-          className="card-media-img"
-          style={{ objectPosition: visual.position }}
-          loading="lazy"
-          decoding="async"
-        />
-        {discount > 0 ? (
-          <span className="badge-discount">{discount}% OFF</span>
-        ) : null}
-      </div>
+      <Link to={detailPath} className="card-media-link" aria-label={`View ${pkg.name} details`}>
+        <div className="card-media">
+          <img
+            src={visual.src}
+            alt=""
+            className="card-media-img"
+            style={{ objectPosition: visual.position }}
+            loading="lazy"
+            decoding="async"
+          />
+          {discount > 0 ? (
+            <span className="badge-discount">{discount}% OFF</span>
+          ) : null}
+        </div>
+      </Link>
 
       <div className="card-content">
         <div className="card-body-text">
           <h3 className="card-title">
-            <Link to={`/packages/${pkg.slug}`}>{pkg.name}</Link>
+            <Link to={detailPath}>{pkg.name}</Link>
           </h3>
           <p className="card-test-count">{testCount} tests included</p>
         </div>
@@ -81,14 +71,13 @@ export default function PackageCard({ pkg, variant = 'default' }) {
               <span className="price-original">₹{pkg.originalPrice}</span>
             ) : null}
           </div>
-          <button
-            type="button"
+          <Link
+            to={detailPath}
             className="action-button"
-            onClick={handleBook}
-            aria-label={`Add ${pkg.name} to cart`}
+            aria-label={`View ${pkg.name} details`}
           >
             <ArrowUpRight size={18} strokeWidth={2.5} />
-          </button>
+          </Link>
         </div>
       </div>
     </article>

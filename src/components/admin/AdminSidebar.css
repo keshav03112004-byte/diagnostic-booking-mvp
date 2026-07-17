@@ -12,28 +12,37 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.5rem;
+  padding: 1.25rem 1.35rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.admin-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--gradient-hero);
-  display: flex;
+.admin-sidebar-logo-wrap {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 1.1rem;
+  flex-shrink: 0;
+  padding: 0.4rem 0.5rem;
+  background: #fff;
+  border-radius: 10px;
 }
 
-.admin-sidebar-brand strong {
+.admin-sidebar-logo-wrap .brand-logo-image {
+  max-width: 110px;
+}
+
+.admin-sidebar-brand-copy {
+  min-width: 0;
+}
+
+.admin-sidebar-brand-copy strong {
   display: block;
   font-size: 1rem;
+  line-height: 1.2;
 }
 
-.admin-sidebar-brand span {
+.admin-sidebar-brand-copy span {
+  display: block;
+  margin-top: 0.15rem;
   font-size: 0.75rem;
   opacity: 0.6;
 }

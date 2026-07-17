@@ -1,5 +1,6 @@
 const Disease = require('../models/Disease');
 const { slugify } = require('../utils/slugify');
+const { resolveDiseaseIcon } = require('../utils/diseaseIcon');
 
 const buildUniqueSlug = async (name, excludeId = null) => {
   let base = slugify(name) || 'disease';
@@ -22,7 +23,7 @@ exports.getDiseases = async (_req, res) => {
 };
 
 exports.createDisease = async (req, res) => {
-  const { name, description, icon, isActive } = req.body;
+  const { name, description, isActive } = req.body;
   if (!name?.trim() || !description?.trim()) {
     return res.status(400).json({ message: 'Name and description are required' });
   }
@@ -32,7 +33,7 @@ exports.createDisease = async (req, res) => {
     name: name.trim(),
     slug,
     description: description.trim(),
-    icon: icon?.trim() || '🩺',
+    icon: resolveDiseaseIcon(name, slug),
     isActive: isActive !== false,
   });
 
@@ -40,7 +41,7 @@ exports.createDisease = async (req, res) => {
 };
 
 exports.updateDisease = async (req, res) => {
-  const { name, description, icon, isActive } = req.body;
+  const { name, description, isActive } = req.body;
   const disease = await Disease.findById(req.params.id);
   if (!disease) return res.status(404).json({ message: 'Disease not found' });
 
@@ -49,8 +50,9 @@ exports.updateDisease = async (req, res) => {
     disease.slug = await buildUniqueSlug(name, disease._id);
   }
   if (description !== undefined) disease.description = String(description).trim();
-  if (icon !== undefined) disease.icon = String(icon).trim() || '🩺';
   if (isActive !== undefined) disease.isActive = !!isActive;
+
+  disease.icon = resolveDiseaseIcon(disease.name, disease.slug);
 
   await disease.save();
   return res.json({ message: 'Disease updated', disease });

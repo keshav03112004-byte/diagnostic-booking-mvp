@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { testAPI, packageAPI } from '../api/api';
 import { useAuth } from '../context/AuthContext';
+import { useInquiryModal } from '../context/InquiryModalContext';
 import BookingForm from '../components/BookingForm';
 import './QuickBook.css';
 
@@ -9,6 +10,7 @@ export default function QuickBook() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { openInquiryModal } = useInquiryModal();
   const [tests, setTests] = useState([]);
   const [packages, setPackages] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -123,7 +125,21 @@ export default function QuickBook() {
           )}
 
           <p className="quick-note">
-            Have an account? <Link to="/login">Login</Link> to auto-fill your details.
+            Prefer a callback instead?{' '}
+            <button
+              type="button"
+              className="quick-note-link"
+              onClick={() =>
+                openInquiryModal({
+                  subject: 'Book a Test',
+                  message: selected
+                    ? `I would like to book: ${selected.name} (₹${selected.price}).`
+                    : 'I would like to book a diagnostic test or health package. Please help me get started.',
+                })
+              }
+            >
+              Send a booking inquiry
+            </button>
           </p>
         </div>
 

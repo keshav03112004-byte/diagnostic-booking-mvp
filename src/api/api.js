@@ -62,10 +62,6 @@ export const inquiryAPI = {
   create: (data) => api.post('/inquiries', data),
 };
 
-export const cmsAPI = {
-  getHero: () => api.get('/cms/hero'),
-};
-
 export const adminAPI = {
   getDashboard: () => api.get('/admin/dashboard'),
   getInquiries: (params) => api.get('/admin/inquiries', { params }),
@@ -94,16 +90,6 @@ export const adminAPI = {
   createPackage: (data) => api.post('/admin/packages', data),
   updatePackage: (id, data) => api.put(`/admin/packages/${id}`, data),
   deletePackage: (id) => api.delete(`/admin/packages/${id}`),
-  getHeroSettings: () => api.get('/admin/cms/settings'),
-  updateHero: (data) => api.put('/admin/cms/hero', data),
-  uploadMedia: (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return api.post('/admin/cms/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-  },
-  generateVideo: (data) => api.post('/admin/cms/generate-video', data),
 };
 
 export const mediaUrl = (path) => {

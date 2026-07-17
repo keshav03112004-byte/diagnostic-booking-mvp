@@ -3,7 +3,7 @@ import { adminAPI } from '../../api/api';
 import './AdminLayout.css';
 import './adminExtras.css';
 
-const EMPTY = { name: '', description: '', icon: '🩺', isActive: true };
+const EMPTY = { name: '', description: '', isActive: true };
 
 export default function AdminDiseases() {
   const [diseases, setDiseases] = useState([]);
@@ -34,7 +34,6 @@ export default function AdminDiseases() {
     setForm({
       name: disease.name || '',
       description: disease.description || '',
-      icon: disease.icon || '🩺',
       isActive: disease.isActive !== false,
     });
   };
@@ -82,7 +81,6 @@ export default function AdminDiseases() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Icon</th>
                 <th>Name</th>
                 <th>Slug</th>
                 <th>Active</th>
@@ -92,7 +90,6 @@ export default function AdminDiseases() {
             <tbody>
               {diseases.map((d) => (
                 <tr key={d._id}>
-                  <td style={{ fontSize: '1.4rem' }}>{d.icon}</td>
                   <td><strong>{d.name}</strong></td>
                   <td>{d.slug}</td>
                   <td>
@@ -124,10 +121,6 @@ export default function AdminDiseases() {
             <div className="form-group">
               <label>Name *</label>
               <input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
-            </div>
-            <div className="form-group">
-              <label>Icon</label>
-              <input value={form.icon} onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))} />
             </div>
             <div className="form-group">
               <label>Description *</label>

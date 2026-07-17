@@ -28,9 +28,17 @@
   color: var(--text-muted);
 }
 
-.quick-note a {
+.quick-note a,
+.quick-note-link {
   color: var(--primary);
   font-weight: 600;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .booking-form h3 {

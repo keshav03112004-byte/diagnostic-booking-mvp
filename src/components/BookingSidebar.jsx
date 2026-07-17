@@ -44,8 +44,12 @@ export default function BookingSidebar({ item, itemType }) {
         <li>
           <span className="info-icon">🧪</span>
           <div>
-            <small>Sample</small>
-            <strong>{item.sampleType || `${item.tests?.length || 0} tests included`}</strong>
+            <small>{itemType === 'package' ? 'Includes' : 'Sample'}</small>
+            <strong>
+              {itemType === 'package'
+                ? `${item.totalTestsCount || item.tests?.length || 0} tests included`
+                : item.sampleType || 'Blood'}
+            </strong>
           </div>
         </li>
         <li>

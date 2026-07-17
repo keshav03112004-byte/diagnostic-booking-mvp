@@ -11,7 +11,6 @@ import AdminTests from './pages/admin/AdminTests';
 import TestForm from './pages/admin/TestForm';
 import AdminPackages from './pages/admin/AdminPackages';
 import PackageForm from './pages/admin/PackageForm';
-import HeroCMS from './pages/admin/HeroCMS';
 
 /** Admin-only router used by the port-5180 Vite server. */
 export default function AdminApp() {
@@ -31,7 +30,6 @@ export default function AdminApp() {
         <Route path="packages" element={<AdminPackages />} />
         <Route path="packages/new" element={<PackageForm />} />
         <Route path="packages/:id/edit" element={<PackageForm />} />
-        <Route path="cms/hero" element={<HeroCMS />} />
       </Route>
       <Route path="*" element={<Navigate to="/admin/login" replace />} />
     </Routes>

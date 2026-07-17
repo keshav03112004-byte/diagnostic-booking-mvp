@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../Logo';
 import './AdminSidebar.css';
 
 const NAV = [
@@ -11,7 +12,6 @@ const NAV = [
   { to: '/admin/packages', label: 'Packages', icon: '📦' },
   { to: '/admin/diseases', label: 'Diseases', icon: '🩺' },
   { to: '/admin/service-areas', label: 'Service Areas', icon: '📍' },
-  { to: '/admin/cms/hero', label: 'Hero CMS', icon: '🎬' },
 ];
 
 export default function AdminSidebar() {
@@ -26,8 +26,10 @@ export default function AdminSidebar() {
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-brand">
-        <span className="admin-logo">E</span>
-        <div>
+        <div className="admin-sidebar-logo-wrap">
+          <Logo height={40} />
+        </div>
+        <div className="admin-sidebar-brand-copy">
           <strong>energex.life</strong>
           <span>Admin Panel</span>
         </div>

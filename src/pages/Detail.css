@@ -417,3 +417,149 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Package detail */
+.package-detail-lead {
+  opacity: 0.92;
+  font-size: 1.05rem;
+  max-width: 640px;
+  margin: 0 0 1.25rem;
+}
+
+.package-detail-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.package-detail-empty h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--secondary);
+}
+
+.package-detail-empty p {
+  color: var(--text-muted);
+  max-width: 420px;
+}
+
+.package-savings-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-top: 1.15rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.package-savings-note svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  color: var(--primary);
+}
+
+.package-test-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.package-tests-table-wrap.has-categories {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.package-tests-table-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin: 0 0 0.85rem;
+}
+
+.tests-table-name {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tests-table-name:hover {
+  color: var(--primary);
+}
+
+.tests-table-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.package-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.package-meta-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.95rem 1rem;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.package-meta-card svg {
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.package-meta-card strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--secondary);
+  margin-bottom: 0.25rem;
+}
+
+.package-meta-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.package-related-section {
+  padding-top: 0.5rem;
+}
+
+.package-related-header {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: none;
+}
+
+.package-related-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+
+.package-related-cta .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+@media (max-width: 992px) {
+  .package-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}

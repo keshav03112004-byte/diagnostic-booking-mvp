@@ -68,7 +68,6 @@ export default function Dashboard() {
           <Link to="/admin/packages" className="btn btn-primary">Manage Packages</Link>
           <Link to="/admin/diseases" className="btn btn-secondary">Manage Diseases</Link>
           <Link to="/admin/service-areas" className="btn btn-secondary">Service Areas</Link>
-          <Link to="/admin/cms/hero" className="btn btn-secondary">Hero CMS</Link>
         </div>
       </div>
     </div>

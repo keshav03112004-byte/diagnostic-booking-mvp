@@ -36,7 +36,7 @@ export default function Profile() {
 
   if (loading) return <div className="loading">Loading...</div>;
   if (!isAuthenticated) {
-    navigate('/login');
+    navigate('/');
     return null;
   }
 

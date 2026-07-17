@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { testAPI, diseaseAPI } from '../api/api';
 import TestCard from '../components/TestCard';
 import '../components/cards.css';
@@ -10,7 +11,9 @@ export default function Tests() {
   const [diseases, setDiseases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const initialSearch = searchParams.get('search') || '';
+  const [query, setQuery] = useState(initialSearch);
+  const [search, setSearch] = useState(initialSearch);
   const disease = searchParams.get('disease') || '';
   const sort = searchParams.get('sort') || '';
 
@@ -35,6 +38,13 @@ export default function Tests() {
     setSearchParams(params);
   };
 
+  const submitSearch = (e) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    setSearch(trimmed);
+    updateFilter('search', trimmed);
+  };
+
   return (
     <>
       <div className="page-header">
@@ -46,13 +56,20 @@ export default function Tests() {
 
       <div className="container section">
         <div className="filters">
-          <input
-            type="search"
-            placeholder="Search tests..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="filter-search"
-          />
+          <form className="filter-search-field" onSubmit={submitSearch} role="search">
+            <input
+              type="search"
+              placeholder="Search tests..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="filter-search"
+              aria-label="Search tests"
+            />
+            <button type="submit" className="filter-search-btn" aria-label="Search tests">
+              <Search size={15} strokeWidth={2.5} aria-hidden="true" />
+              <span>Search</span>
+            </button>
+          </form>
           <select value={disease} onChange={(e) => updateFilter('disease', e.target.value)}>
             <option value="">All Categories</option>
             {diseases.map((d) => (

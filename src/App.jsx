@@ -3,8 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import InquiryModal from './components/InquiryModal';
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import BookInquiryRedirect from './pages/BookInquiryRedirect';
 import Tests from './pages/Tests';
 import TestDetail from './pages/TestDetail';
 import Packages from './pages/Packages';
@@ -27,7 +26,6 @@ import AdminTests from './pages/admin/AdminTests';
 import TestForm from './pages/admin/TestForm';
 import AdminPackages from './pages/admin/AdminPackages';
 import PackageForm from './pages/admin/PackageForm';
-import HeroCMS from './pages/admin/HeroCMS';
 
 function PublicApp() {
   return (
@@ -36,8 +34,8 @@ function PublicApp() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<BookInquiryRedirect />} />
+          <Route path="/register" element={<BookInquiryRedirect />} />
           <Route path="/tests" element={<Tests />} />
           <Route path="/tests/:slug" element={<TestDetail />} />
           <Route path="/packages" element={<Packages />} />
@@ -73,7 +71,6 @@ export default function App() {
         <Route path="packages" element={<AdminPackages />} />
         <Route path="packages/new" element={<PackageForm />} />
         <Route path="packages/:id/edit" element={<PackageForm />} />
-        <Route path="cms/hero" element={<HeroCMS />} />
       </Route>
       <Route path="/*" element={<PublicApp />} />
     </Routes>
