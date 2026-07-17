@@ -89,6 +89,7 @@ export default function Navbar() {
           </Link>
 
           <nav className="nav-links" aria-label="Primary">
+            <Link to="/">Home</Link>
             <Link to="/tests">Tests</Link>
             <Link to="/packages">Packages</Link>
             <button type="button" className="nav-quick" onClick={openQuickBook}>
@@ -141,6 +142,9 @@ export default function Navbar() {
           <div className="nav-mobile-panel">
             <NavSearch className="nav-search-mobile" onNavigate={() => setMenuOpen(false)} />
             <nav className="nav-mobile-links" aria-label="Mobile">
+              <Link to="/" onClick={() => setMenuOpen(false)}>
+                Home
+              </Link>
               <Link to="/tests" onClick={() => setMenuOpen(false)}>
                 Tests
               </Link>

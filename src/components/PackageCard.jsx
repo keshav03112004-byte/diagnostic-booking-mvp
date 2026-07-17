@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 
 function getPackageImage(name = '') {
@@ -30,13 +30,20 @@ function getPackageImage(name = '') {
 }
 
 export default function PackageCard({ pkg, variant = 'default' }) {
-  const testCount = pkg.tests?.length || 0;
+  const navigate = useNavigate();
+  const testCount = pkg.tests?.length || pkg.totalTestsCount || 0;
   const discount = pkg.originalPrice
     ? Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100)
     : 0;
   const isFeatured = variant === 'featured';
   const visual = getPackageImage(pkg.name);
   const detailPath = `/packages/${pkg.slug}`;
+
+  const goToDetails = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (pkg.slug) navigate(detailPath);
+  };
 
   return (
     <article className={isFeatured ? 'premium-package-card' : 'premium-package-card is-light'}>
@@ -71,13 +78,14 @@ export default function PackageCard({ pkg, variant = 'default' }) {
               <span className="price-original">₹{pkg.originalPrice}</span>
             ) : null}
           </div>
-          <Link
-            to={detailPath}
+          <button
+            type="button"
             className="action-button"
+            onClick={goToDetails}
             aria-label={`View ${pkg.name} details`}
           >
-            <ArrowUpRight size={18} strokeWidth={2.5} />
-          </Link>
+            <ArrowUpRight size={18} strokeWidth={2.5} aria-hidden="true" />
+          </button>
         </div>
       </div>
     </article>

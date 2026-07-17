@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { bookingAPI } from '../api/api';
 import { useAuth } from '../context/AuthContext';
+import './QuickBook.css';
 
 const STATUS_LABELS = {
   booked: 'Booked',

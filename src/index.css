@@ -72,6 +72,12 @@ body {
   overflow-x: hidden;
 }
 
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -85,12 +91,45 @@ a {
 
 .main-content {
   flex: 1;
+  padding-bottom: 3.5rem;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .main-content:has(.floating-cta) {
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .page-header {
+    padding: 2rem 0;
+  }
+
+  .page-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .section {
+    padding: 2.5rem 0;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.85rem;
+  }
 }
 
 /* Buttons — one primary + one secondary system everywhere */
@@ -203,7 +242,7 @@ a {
   padding: 0.75rem 1rem;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
   background: var(--surface);
@@ -244,7 +283,7 @@ a {
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 1.35rem;
 }
 
@@ -379,7 +418,7 @@ a {
   outline: none;
   background: transparent;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text);
 }
 
@@ -398,7 +437,8 @@ a {
   justify-content: center;
   gap: 0.35rem;
   flex-shrink: 0;
-  height: 34px;
+  min-height: 40px;
+  height: 40px;
   padding: 0 0.9rem;
   border: none;
   border-radius: 7px;
@@ -419,13 +459,40 @@ a {
   transform: scale(0.97);
 }
 
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .filter-search-field,
+  .filters select,
+  .filter-search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .filters select {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .filters {
+    gap: 0.65rem;
+  }
+}
+
 @media (max-width: 480px) {
   .filter-search-btn span {
     display: none;
   }
 
   .filter-search-btn {
-    width: 34px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
     padding: 0;
   }
 }
@@ -443,8 +510,9 @@ a {
   padding: 0.65rem 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   min-width: 160px;
+  min-height: 44px;
   background: #fff;
 }
 

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUpRight, Clock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
@@ -114,7 +114,9 @@ function getCardDetails(name, test) {
 }
 
 export default function TestCard({ test, variant = 'default', active = false, onActivate }) {
+  const navigate = useNavigate();
   const { addItem } = useCart();
+  const detailPath = `/tests/${test.slug}`;
 
   const handleBook = (e) => {
     e.preventDefault();
@@ -125,6 +127,12 @@ export default function TestCard({ test, variant = 'default', active = false, on
       name: test.name,
       price: test.price,
     });
+  };
+
+  const goToDetails = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (test.slug) navigate(detailPath);
   };
 
   const { category, displayName, originalPrice, reportTat } = getCardDetails(test.name, test);
@@ -237,10 +245,10 @@ export default function TestCard({ test, variant = 'default', active = false, on
           <button
             type="button"
             className="assay-lens-book"
-            onClick={handleBook}
-            aria-label={`Add ${displayName} to cart`}
+            onClick={goToDetails}
+            aria-label={`View ${displayName} details`}
           >
-            <ArrowUpRight size={16} strokeWidth={2.75} />
+            <ArrowUpRight size={16} strokeWidth={2.75} aria-hidden="true" />
           </button>
         </div>
       </div>

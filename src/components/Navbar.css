@@ -82,12 +82,6 @@
   font-style: normal;
 }
 
-@media (max-width: 720px) {
-  .logo-slogan {
-    display: none;
-  }
-}
-
 .nav-links {
   display: flex;
   align-items: center;
@@ -181,7 +175,7 @@
   outline: none;
   background: transparent;
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text);
 }
@@ -199,11 +193,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 7px;
   background: var(--secondary);
   color: #fff;
   cursor: pointer;
@@ -348,13 +342,14 @@
   display: none;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: #fff;
   color: var(--secondary);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .nav-menu-toggle:hover {
@@ -384,12 +379,9 @@
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
 }
 
-@media (max-width: 768px) {
-  .top-bar span:first-child {
-    font-size: 0.72rem;
-  }
-
-  .top-bar-phone {
+/* Responsive hamburger — must come after base display:none rules */
+@media (max-width: 1024px) {
+  .logo-slogan {
     display: none;
   }
 
@@ -398,8 +390,9 @@
   .nav-logout,
   .nav-login,
   .nav-register,
-  .nav-search-desktop {
-    display: none;
+  .nav-search-desktop,
+  .nav-avatar {
+    display: none !important;
   }
 
   .nav-menu-toggle {
@@ -409,6 +402,7 @@
   .navbar-inner {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     height: 64px;
   }
 
@@ -419,6 +413,10 @@
     left: 0;
     right: 0;
     z-index: 50;
+    max-height: calc(100vh - 64px);
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 0.75rem 1.25rem 1.25rem;
     background: #fff;
     border-bottom: 1px solid var(--border);
@@ -437,6 +435,7 @@
     align-items: center;
     gap: 0.5rem;
     width: 100%;
+    min-height: 44px;
     padding: 0.85rem 0.95rem;
     border: none;
     border-radius: var(--radius-sm);
@@ -469,5 +468,15 @@
 
   .nav-mobile-logout {
     color: var(--danger) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-bar span:first-child {
+    font-size: 0.72rem;
+  }
+
+  .top-bar-phone {
+    display: none;
   }
 }

@@ -86,7 +86,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <MapPin size={16} strokeWidth={2.25} />
-                  <span>Gurgaon, Delhi NCR & Bangalore</span>
+                  <span>Jaipur, Rajasthan</span>
                 </li>
               </ul>
             </div>

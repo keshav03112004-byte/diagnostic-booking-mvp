@@ -618,32 +618,32 @@ export default function Home() {
                   decoding="async"
                   fetchPriority="high"
                 />
+              </div>
 
-                <div className="hero-inline-stats hero-inline-stats-on-visual">
-                  {hero.heroStats.map((stat) => {
-                    const Icon =
-                      heroStatIconMap[stat.icon]
-                      || heroStatLabelIconMap[stat.label]
-                      || Activity;
-                    const toneClass =
-                      stat.label === 'Sample Collection' || stat.label === 'Home Collection'
-                        ? 'tone-home'
-                        : stat.label === 'Report Delivery'
-                          ? 'tone-report'
-                          : 'tone-tests';
-                    return (
-                      <article key={stat.label} className="hero-inline-stat">
-                        <span className={`hero-inline-stat-icon ${toneClass}`.trim()} aria-hidden="true">
-                          <Icon size={15} strokeWidth={2} />
-                        </span>
-                        <div className="hero-inline-stat-copy">
-                          <strong>{stat.value}</strong>
-                          <span>{stat.label}</span>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
+              <div className="hero-inline-stats hero-inline-stats-on-visual">
+                {hero.heroStats.map((stat) => {
+                  const Icon =
+                    heroStatIconMap[stat.icon]
+                    || heroStatLabelIconMap[stat.label]
+                    || Activity;
+                  const toneClass =
+                    stat.label === 'Sample Collection' || stat.label === 'Home Collection'
+                      ? 'tone-home'
+                      : stat.label === 'Report Delivery'
+                        ? 'tone-report'
+                        : 'tone-tests';
+                  return (
+                    <article key={stat.label} className="hero-inline-stat">
+                      <span className={`hero-inline-stat-icon ${toneClass}`.trim()} aria-hidden="true">
+                        <Icon size={15} strokeWidth={2} />
+                      </span>
+                      <div className="hero-inline-stat-copy">
+                        <strong>{stat.value}</strong>
+                        <span>{stat.label}</span>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </div>
           </motion.div>

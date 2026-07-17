@@ -6,7 +6,7 @@
 
 /* Vertical rhythm only — horizontal inset comes from .container */
 .footer-main {
-  padding: 4.5rem 0 3.5rem;
+  padding: 4.5rem 0 3.75rem;
 }
 
 .footer-grid {
@@ -198,18 +198,26 @@
   }
 }
 
-@media (max-width: 560px) {
-  .footer-main {
-    padding: 3.25rem 0 2.75rem;
-  }
-
+@media (max-width: 768px) {
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 2.25rem;
   }
 
   .footer-brand {
     grid-column: auto;
+  }
+
+  .footer-links a,
+  .footer-link-btn {
+    min-height: 44px;
+    align-items: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-main {
+    padding: 3.25rem 0 2.75rem;
   }
 
   .footer-desc {
