@@ -10,7 +10,6 @@ export default function AdminUsers() {
   const [role, setRole] = useState('');
   const [q, setQ] = useState('');
   const [selected, setSelected] = useState(null);
-  const [bookings, setBookings] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', role: 'user' });
   const [saving, setSaving] = useState(false);
 
@@ -43,7 +42,6 @@ export default function AdminUsers() {
     });
     const res = await adminAPI.getUser(user._id);
     setSelected(res.data.user);
-    setBookings(res.data.bookings || []);
   };
 
   const handleUpdate = async () => {
@@ -144,18 +142,9 @@ export default function AdminUsers() {
                 <option value="admin">admin</option>
               </select>
             </div>
-            <h3 style={{ margin: '1rem 0 0.5rem', fontSize: '1rem' }}>Recent bookings ({bookings.length})</h3>
-            <ul style={{ margin: 0, paddingLeft: '1.1rem', maxHeight: 160, overflow: 'auto' }}>
-              {bookings.length === 0 ? (
-                <li style={{ color: 'var(--text-muted)' }}>No bookings yet</li>
-              ) : (
-                bookings.map((b) => (
-                  <li key={b._id}>
-                    {b.orderId} · {b.status} · ₹{b.totalAmount}
-                  </li>
-                ))
-              )}
-            </ul>
+            <p className="admin-user-wa-note">
+              Customer bookings and inquiries are managed on WhatsApp Business, not in this panel.
+            </p>
             <div className="admin-actions" style={{ marginTop: '1rem' }}>
               <button type="button" className="btn btn-primary" onClick={handleUpdate} disabled={saving}>
                 {saving ? 'Saving...' : 'Save'}

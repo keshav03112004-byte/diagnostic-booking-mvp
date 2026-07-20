@@ -1,12 +1,14 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #f1f5f9;
+  background:
+    radial-gradient(ellipse 80% 50% at 100% 0%, rgba(8, 176, 144, 0.06), transparent 50%),
+    linear-gradient(180deg, #eef4f2 0%, #f1f5f9 40%, #f4f7f9 100%);
 }
 
 .admin-main {
   flex: 1;
-  padding: 2rem;
+  padding: 1.75rem 2rem 2.5rem;
   overflow-x: auto;
 }
 

@@ -5,13 +5,10 @@ import './AdminSidebar.css';
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
-  { to: '/admin/bookings', label: 'Bookings', icon: '🧾' },
-  { to: '/admin/inquiries', label: 'Inquiries', icon: '💬' },
-  { to: '/admin/users', label: 'Users', icon: '👥' },
   { to: '/admin/tests', label: 'Tests', icon: '🧪' },
   { to: '/admin/packages', label: 'Packages', icon: '📦' },
   { to: '/admin/diseases', label: 'Diseases', icon: '🩺' },
-  { to: '/admin/service-areas', label: 'Service Areas', icon: '📍' },
+  { to: '/admin/users', label: 'Users', icon: '👥' },
 ];
 
 export default function AdminSidebar() {

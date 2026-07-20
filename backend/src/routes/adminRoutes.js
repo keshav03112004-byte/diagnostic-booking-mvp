@@ -22,6 +22,9 @@ const router = express.Router();
 router.use(auth, requireAdmin);
 
 router.get('/dashboard', asyncHandler(async (_req, res) => {
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
   const [
     tests,
     packages,
@@ -32,6 +35,10 @@ router.get('/dashboard', asyncHandler(async (_req, res) => {
     diseases,
     bookedToday,
     pendingPayments,
+    recentBookings,
+    recentInquiries,
+    bookingsByStatus,
+    paidBookings,
   ] = await Promise.all([
     Test.countDocuments(),
     Package.countDocuments(),
@@ -40,11 +47,25 @@ router.get('/dashboard', asyncHandler(async (_req, res) => {
     Inquiry.countDocuments({ status: 'new' }),
     User.countDocuments({ role: 'user' }),
     Disease.countDocuments(),
-    Booking.countDocuments({
-      createdAt: { $gte: new Date(new Date().setHours(0, 0, 0, 0)) },
-    }),
+    Booking.countDocuments({ createdAt: { $gte: startOfToday } }),
     Booking.countDocuments({ paymentStatus: 'pending' }),
+    Booking.find()
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .select('orderId patientName totalAmount status paymentStatus createdAt items')
+      .lean(),
+    Inquiry.find()
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .select('name mobile subject status createdAt')
+      .lean(),
+    Booking.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+    Booking.countDocuments({ paymentStatus: 'paid' }),
   ]);
+
+  const statusMap = Object.fromEntries(
+    (bookingsByStatus || []).map((row) => [row._id, row.count])
+  );
 
   res.json({
     tests,
@@ -56,6 +77,16 @@ router.get('/dashboard', asyncHandler(async (_req, res) => {
     diseases,
     bookedToday,
     pendingPayments,
+    paidBookings,
+    recentBookings,
+    recentInquiries,
+    bookingsByStatus: {
+      booked: statusMap.booked || 0,
+      sample_collected: statusMap.sample_collected || 0,
+      processing: statusMap.processing || 0,
+      report_ready: statusMap.report_ready || 0,
+      cancelled: statusMap.cancelled || 0,
+    },
   });
 }));
 
