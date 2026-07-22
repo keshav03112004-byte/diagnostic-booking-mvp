@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = '919998880005';
+const WHATSAPP_NUMBER = '919256525580';
 
 const DEFAULT_MESSAGE =
   'Hi, I would like to book a diagnostic test or health package. Please help me get started.';

@@ -1,42 +1,66 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 
-function getPackageImage(name = '') {
-  const n = name.toLowerCase();
+const PACKAGE_THUMBNAILS = {
+  'energex-basic-health-checkup': {
+    src: '/images/pkg-basic-health.png',
+    position: '50% 45%',
+  },
+  'energex-advance-full-body-checkup': {
+    src: '/images/pkg-advance-fullbody.png',
+    position: '50% 40%',
+  },
+  'energex-heart-care-plan': {
+    src: '/images/pkg-heart-care.png',
+    position: '50% 40%',
+  },
+  'energex-senior-citizen-plan': {
+    src: '/images/pkg-senior-citizen.png',
+    position: '45% 35%',
+  },
+  'energex-female-care-plan': {
+    src: '/images/pkg-female-care.png',
+    position: '50% 30%',
+  },
+  'energex-male-care-plan': {
+    src: '/images/pkg-male-care.png',
+    position: '50% 30%',
+  },
+  'energex-cancer-screening-male': {
+    src: '/images/pkg-cancer-male.png',
+    position: '50% 40%',
+  },
+  'energex-cancer-screening-female': {
+    src: '/images/pkg-cancer-female.png',
+    position: '50% 35%',
+  },
+};
 
-  if (n.includes('diabetes') || n.includes('sugar') || n.includes('glucose')) {
-    return { src: '/images/hero-product-raw.png', position: '50% 40%' };
-  }
-  if (n.includes('thyroid') || n.includes('vitamin')) {
-    return { src: '/images/bento-concerns.png', position: '58% 38%' };
-  }
-  if (n.includes('women') || n.includes('female') || n.includes('pregnancy')) {
-    return { src: '/images/value-home-portrait.png', position: '50% 28%' };
-  }
-  if (n.includes('heart') || n.includes('cardiac') || n.includes('lipid')) {
-    return { src: '/images/promo-doctor.png', position: '55% 28%' };
-  }
-  if (n.includes('kidney') || n.includes('liver')) {
-    return { src: '/images/value-home-collection.png', position: '40% 45%' };
-  }
-  if (n.includes('basic') || n.includes('health checkup') || n.includes('checkup') || n.includes('full body')) {
-    return { src: '/images/bento-packages.png', position: '48% 42%' };
-  }
-  if (n.includes('quick') || n.includes('fever') || n.includes('infection')) {
-    return { src: '/images/bento-quick-book.png', position: '50% 40%' };
-  }
+function getPackageImage(pkg = {}) {
+  const bySlug = PACKAGE_THUMBNAILS[pkg.slug];
+  if (bySlug) return bySlug;
 
-  return { src: '/images/promo-banner-ref.png', position: '50% 40%' };
+  const n = (pkg.name || '').toLowerCase();
+  if (n.includes('cancer') && n.includes('female')) return PACKAGE_THUMBNAILS['energex-cancer-screening-female'];
+  if (n.includes('cancer') && n.includes('male')) return PACKAGE_THUMBNAILS['energex-cancer-screening-male'];
+  if (n.includes('female')) return PACKAGE_THUMBNAILS['energex-female-care-plan'];
+  if (n.includes('male')) return PACKAGE_THUMBNAILS['energex-male-care-plan'];
+  if (n.includes('heart')) return PACKAGE_THUMBNAILS['energex-heart-care-plan'];
+  if (n.includes('senior')) return PACKAGE_THUMBNAILS['energex-senior-citizen-plan'];
+  if (n.includes('advance') || n.includes('full body')) return PACKAGE_THUMBNAILS['energex-advance-full-body-checkup'];
+  if (n.includes('basic')) return PACKAGE_THUMBNAILS['energex-basic-health-checkup'];
+
+  return { src: '/images/bento-packages.png', position: '48% 42%' };
 }
 
 export default function PackageCard({ pkg, variant = 'default' }) {
   const navigate = useNavigate();
-  const testCount = pkg.tests?.length || pkg.totalTestsCount || 0;
+  const testCount = pkg.totalTestsCount || pkg.tests?.length || 0;
   const discount = pkg.originalPrice
     ? Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100)
     : 0;
   const isFeatured = variant === 'featured';
-  const visual = getPackageImage(pkg.name);
+  const visual = getPackageImage(pkg);
   const detailPath = `/packages/${pkg.slug}`;
 
   const goToDetails = (e) => {

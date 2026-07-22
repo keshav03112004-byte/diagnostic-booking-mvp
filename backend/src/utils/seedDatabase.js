@@ -11,7 +11,7 @@ const seedDatabase = async (force = false) => {
     return;
   }
 
-  console.log('Seeding DiagBook catalog: 13 tests, 5 packages, 10 categories...');
+  console.log(`Seeding DiagBook catalog: ${tests.length} tests, ${packages.length} packages...`);
 
   await Promise.all([
     Disease.deleteMany({}),
@@ -25,11 +25,11 @@ const seedDatabase = async (force = false) => {
   const bySlug = (slug) => insertedTests.find((t) => t.slug === slug)?._id;
 
   const packageDocs = packages.map((pkg) => {
-    const { testSlugs, ...rest } = pkg;
+    const { testSlugs, thyrocareId, ...rest } = pkg;
     const testIds = (testSlugs || []).map((slug) => bySlug(slug)).filter(Boolean);
     return {
       ...rest,
-      totalTestsCount: testSlugs?.length || 0,
+      totalTestsCount: rest.totalTestsCount || testSlugs?.length || testIds.length || 0,
       tests: testIds,
     };
   });

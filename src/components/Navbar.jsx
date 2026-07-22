@@ -58,9 +58,9 @@ export default function Navbar() {
         <div className="top-bar">
           <div className="container top-bar-inner">
             <span>Free home sample collection on every booking</span>
-            <a className="top-bar-phone" href="tel:+919998880005">
+            <a className="top-bar-phone" href="tel:+919256525580">
               <Phone size={13} strokeWidth={2.25} />
-              +91 999-888-0005
+              +91 9256525580
             </a>
           </div>
         </div>

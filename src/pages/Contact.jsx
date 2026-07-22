@@ -49,7 +49,7 @@ export default function Contact() {
             <ul className="contact-details">
               <li>
                 <Phone size={16} strokeWidth={2.25} />
-                <a href="tel:+919998880005">+91 999-888-0005</a>
+                <a href="tel:+919256525580">+91 9256525580</a>
               </li>
               <li>
                 <Mail size={16} strokeWidth={2.25} />
