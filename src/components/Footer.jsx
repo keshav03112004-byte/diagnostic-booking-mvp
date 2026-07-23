@@ -48,8 +48,8 @@ export default function Footer() {
             <div className="footer-col">
               <h4>Quick Links</h4>
               <nav className="footer-links" aria-label="Quick links">
-                <Link to="/tests">All Tests</Link>
                 <Link to="/packages">Health Packages</Link>
+                <Link to="/tests">All Tests</Link>
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="footer-whatsapp-link">
                   <Zap size={14} strokeWidth={2.4} fill="currentColor" />
                   Quick Book

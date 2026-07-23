@@ -24,6 +24,7 @@ const packageSchema = new mongoose.Schema(
     diseaseCategories: [{ type: String, lowercase: true }],
     isPopular: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
+    sortOrder: { type: Number, default: 100 },
   },
   { timestamps: true }
 );

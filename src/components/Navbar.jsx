@@ -86,8 +86,8 @@ export default function Navbar() {
 
           <nav className="nav-links" aria-label="Primary">
             <Link to="/">Home</Link>
-            <Link to="/tests">Tests</Link>
             <Link to="/packages">Packages</Link>
+            <Link to="/tests">Tests</Link>
             <button type="button" className="nav-quick" onClick={openQuickBook}>
               <Zap size={15} strokeWidth={2.4} fill="currentColor" />
               Quick Book
@@ -141,11 +141,11 @@ export default function Navbar() {
               <Link to="/" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
-              <Link to="/tests" onClick={() => setMenuOpen(false)}>
-                Tests
-              </Link>
               <Link to="/packages" onClick={() => setMenuOpen(false)}>
                 Packages
+              </Link>
+              <Link to="/tests" onClick={() => setMenuOpen(false)}>
+                Tests
               </Link>
               <Link to="/contact" onClick={() => setMenuOpen(false)}>
                 Contact

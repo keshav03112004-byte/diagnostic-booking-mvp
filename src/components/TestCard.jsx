@@ -1,37 +1,51 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowUpRight, Clock, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  Clock,
+  Zap,
+  FlaskConical,
+  Heart,
+  Activity,
+  Droplet,
+} from 'lucide-react';
 import { openWhatsApp, getBookingWhatsAppMessage } from '../utils/whatsapp';
 
 const CATEGORY_VISUALS = {
   DIABETES: {
     image: '/images/bento-blood-tests.png',
     position: '62% 40%',
+    Icon: Droplet,
   },
   GENERAL: {
     image: '/images/hero-product-raw.png',
     position: '50% 40%',
+    Icon: FlaskConical,
   },
   KIDNEY: {
     image: '/images/bento-quick-book.png',
     position: '48% 42%',
+    Icon: Activity,
   },
   HEART: {
     image: '/images/promo-doctor.png',
     position: '55% 28%',
+    Icon: Heart,
   },
   LIVER: {
     image: '/images/bento-packages.png',
     position: '48% 42%',
+    Icon: Activity,
   },
   THYROID: {
     image: '/images/bento-concerns.png',
     position: '58% 38%',
+    Icon: FlaskConical,
   },
 };
 
 const DEFAULT_VISUAL = {
   image: '/images/hero-visual.png',
   position: '50% 40%',
+  Icon: FlaskConical,
 };
 
 function getCardDetails(name, test) {
@@ -114,7 +128,6 @@ function getCardDetails(name, test) {
 }
 
 export default function TestCard({ test, variant = 'default', active = false, onActivate }) {
-  const navigate = useNavigate();
   const detailPath = `/tests/${test.slug}`;
 
   const handleBook = (e) => {
@@ -123,14 +136,9 @@ export default function TestCard({ test, variant = 'default', active = false, on
     openWhatsApp(getBookingWhatsAppMessage(test, 'test'));
   };
 
-  const goToDetails = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (test.slug) navigate(detailPath);
-  };
-
   const { category, displayName, originalPrice, reportTat } = getCardDetails(test.name, test);
   const visual = CATEGORY_VISUALS[category] || DEFAULT_VISUAL;
+  const Icon = visual.Icon || FlaskConical;
 
   if (variant === 'carousel') {
     const rootClass = `assay-lens assay-lens--carousel${active ? ' is-active' : ' is-side'}`;
@@ -210,43 +218,49 @@ export default function TestCard({ test, variant = 'default', active = false, on
   }
 
   return (
-    <Link to={`/tests/${test.slug}`} className="assay-lens">
-      <div className="assay-lens-media">
+    <article className="clinic-card">
+      <div className="clinic-card-media">
         <img
           src={visual.image}
           alt=""
-          className="assay-lens-img"
+          className="clinic-card-img"
           style={{ objectPosition: visual.position }}
           loading="lazy"
           decoding="async"
         />
       </div>
 
-      <div className="assay-lens-body">
-        <span className="assay-lens-cat">{category}</span>
-        <h3 className="assay-lens-title">{displayName}</h3>
-        <div className="assay-lens-tat">
-          <Clock size={13} strokeWidth={2.5} />
-          <span>{reportTat}</span>
-        </div>
+      <div className="clinic-card-icon" aria-hidden="true">
+        <Icon size={18} strokeWidth={1.75} />
+      </div>
 
-        <div className="assay-lens-foot">
-          <div className="assay-lens-pricing">
-            <span className="assay-lens-price">₹{test.price}</span>
-            {originalPrice ? (
-              <span className="assay-lens-strike">₹{originalPrice}</span>
-            ) : null}
-          </div>
+      <div className="clinic-card-body">
+        <h3 className="clinic-card-title">
+          <Link to={detailPath}>{displayName}</Link>
+        </h3>
+        <p className="clinic-card-desc">
+          {category} test with {reportTat.toLowerCase()}. Trusted home collection and transparent pricing.
+        </p>
+        <div className="clinic-card-meta">
+          <span className="clinic-card-price">₹{test.price}</span>
+          {originalPrice ? <span className="clinic-card-strike">₹{originalPrice}</span> : null}
+          <span className="clinic-card-tests">{reportTat}</span>
+        </div>
+        <div className="clinic-card-actions">
+          <Link to={detailPath} className="clinic-card-cta">
+            Learn More
+          </Link>
           <button
             type="button"
-            className="assay-lens-book"
-            onClick={goToDetails}
-            aria-label={`View ${displayName} details`}
+            className="clinic-card-book"
+            onClick={handleBook}
+            aria-label={`Book ${displayName} on WhatsApp`}
           >
-            <ArrowUpRight size={16} strokeWidth={2.75} aria-hidden="true" />
+            <Zap size={14} strokeWidth={2.4} fill="currentColor" />
+            Book
           </button>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

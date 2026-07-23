@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { testAPI, packageAPI, diseaseAPI } from '../api/api';
 import TestCard from '../components/TestCard';
-import PackageCard from '../components/PackageCard';
+import { getPackageImage, formatPackageTitle } from '../components/PackageCard';
 import DiseaseCard from '../components/DiseaseCard';
 import PincodeChecker from '../components/PincodeChecker';
 import FloatingCTA from '../components/FloatingCTA';
@@ -37,11 +37,29 @@ import {
   Syringe,
   IndianRupee,
   Stethoscope,
+  Heart,
+  Ribbon,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import '../components/cards.css';
 import './Home.css';
 
+const PACKAGE_SECTION_FEATURES = [
+  { label: 'NABL Labs' },
+  { label: 'Home Collection' },
+  { label: '24h Reports' },
+];
+
+const PACKAGE_SHOWCASE_ICONS = {
+  'energex-basic-health-checkup': FlaskConical,
+  'energex-advance-full-body-checkup': ClipboardList,
+  'energex-heart-care-plan': Heart,
+  'energex-senior-citizen-plan': Users,
+  'energex-female-care-plan': User,
+  'energex-male-care-plan': Activity,
+  'energex-cancer-screening-male': Ribbon,
+  'energex-cancer-screening-female': Ribbon,
+};
 const CONCERN_TABS = [
   {
     id: 'specialties',
@@ -500,7 +518,8 @@ export default function Home() {
         const popularTestsData = popularTestsRes.data.tests || [];
         const popularPackagesData = popularPackagesRes.data.packages || [];
         setPopularTests(popularTestsData.length ? popularTestsData : allTestsData.slice(0, 8));
-        setPopularPackages(popularPackagesData.length ? popularPackagesData : allPackagesData.slice(0, 4));
+        // Catalog sequence: Basic → Advance → Heart → Senior → …
+        setPopularPackages((allPackagesData.length ? allPackagesData : popularPackagesData).slice(0, 3));
         setDiseases(diseasesRes.data.diseases || []);
       })
       .catch((err) => {
@@ -646,73 +665,98 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Popular Tests — Most Booked */}
-      <ScrollReveal as="section" className="section section-popular-tests">
-        <div className="popular-tests-glow" aria-hidden="true" />
-        <div className="container popular-tests-inner">
-          <header className="popular-tests-header">
-            <div className="popular-tests-header-copy">
-              <span className="popular-tests-eyebrow">MOST BOOKED</span>
-              <h2 className="popular-tests-title">
-                Popular <em>tests</em>, ready to book.
+      {/* Popular Packages — Full Body Checkups */}
+      <ScrollReveal as="section" className="section section-packages">
+        <div className="packages-glow" aria-hidden="true" />
+        <div className="container packages-inner">
+          <header className="packages-header">
+            <div className="packages-header-main">
+              <span className="packages-eyebrow">FULL BODY CHECKUPS</span>
+              <h2 className="packages-title">
+                Packages that <em>say a lot</em>,
+                <br />
+                for a little.
               </h2>
+              <p className="packages-lede">
+                Physician-curated bundles that screen you head-to-toe. Save up to 82% versus individual tests, with the same NABL quality.
+              </p>
             </div>
-            <div className="popular-tests-header-actions">
-              <Link to="/tests" className="btn btn-primary">
-                View all tests
-                <ArrowUpRight size={15} strokeWidth={2.75} />
-              </Link>
-            </div>
+            <ul className="packages-feature-row" aria-label="Package benefits">
+              {PACKAGE_SECTION_FEATURES.map((feature) => (
+                <li key={feature.label}>{feature.label}</li>
+              ))}
+            </ul>
           </header>
 
-          <div
-            className="popular-tests-carousel"
-            onMouseEnter={() => setPopularPaused(true)}
-            onMouseLeave={() => setPopularPaused(false)}
-            onFocusCapture={() => setPopularPaused(true)}
-            onBlurCapture={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget)) {
-                setPopularPaused(false);
-              }
-            }}
-          >
-            <div className="popular-tests-track" ref={popularTrackRef}>
-              {popularLoopSlides.map((slide, index) => (
-                <div
-                  key={slide.key}
-                  className={`popular-tests-slide${index === popularLoopIdx ? ' is-active' : ''}`}
-                  data-popular-loop={index}
+          <div className="packages-showcase-grid">
+            {popularPackages.map((pkg, index) => {
+              const visual = getPackageImage(pkg);
+              const Icon = PACKAGE_SHOWCASE_ICONS[pkg.slug] || FlaskConical;
+              const testCount = pkg.totalTestsCount || pkg.tests?.length || 0;
+              const shortName = pkg.name.replace(/^EnergeX\s+/i, '');
+              const titledShort = formatPackageTitle(shortName, pkg.slug);
+              const shortDesc =
+                pkg.description?.length > 90
+                  ? `${pkg.description.slice(0, 87).trim()}…`
+                  : pkg.description;
+              return (
+                <Link
+                  key={pkg._id}
+                  to={`/packages/${pkg.slug}`}
+                  className={`packages-showcase-card packages-showcase-tone-${index % 3}`}
+                  aria-label={`View ${pkg.name} details`}
                 >
-                  <TestCard
-                    test={slide.test}
-                    variant="carousel"
-                    active={index === popularLoopIdx}
-                    onActivate={() => focusPopularSlide(slide.realIndex)}
-                  />
-                </div>
-              ))}
-            </div>
+                  <span className="packages-showcase-inner">
+                    <span className="packages-showcase-face packages-showcase-face-front">
+                      <span className="packages-showcase-watermark" aria-hidden="true">
+                        <Icon size={140} strokeWidth={1} />
+                      </span>
+                      <span className="packages-showcase-icon" aria-hidden="true">
+                        <Icon size={18} strokeWidth={1.75} />
+                      </span>
+                      <span className="packages-showcase-copy">
+                        <h3>{titledShort}</h3>
+                        <p>{shortDesc}</p>
+                        <span className="packages-showcase-meta">
+                          <span className="packages-showcase-price">₹{pkg.price}</span>
+                          <span className="packages-showcase-tests">{testCount} tests</span>
+                        </span>
+                      </span>
+                    </span>
 
-            {popularCount > 1 && (
-              <div className="popular-tests-nav" aria-label="Browse popular tests">
-                <button
-                  type="button"
-                  className="popular-tests-arrow"
-                  aria-label="Previous popular test"
-                  onClick={() => stepPopularCarousel(-1)}
-                >
-                  <ArrowLeft size={16} strokeWidth={2.25} />
-                </button>
-                <button
-                  type="button"
-                  className="popular-tests-arrow is-next"
-                  aria-label="Next popular test"
-                  onClick={() => stepPopularCarousel(1)}
-                >
-                  <ArrowRight size={16} strokeWidth={2.25} />
-                </button>
-              </div>
-            )}
+                    <span className="packages-showcase-face packages-showcase-face-back">
+                      <img
+                        src={visual.src}
+                        alt=""
+                        className="packages-showcase-media"
+                        style={{ objectPosition: visual.position }}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span className="packages-showcase-veil" aria-hidden="true" />
+                      <span className="packages-showcase-icon is-on-image" aria-hidden="true">
+                        <Icon size={18} strokeWidth={1.75} />
+                      </span>
+                      <span className="packages-showcase-copy">
+                        <h3>{titledShort}</h3>
+                        <p>Tap to view full package details</p>
+                        <span className="packages-showcase-meta">
+                          <span className="packages-showcase-price">₹{pkg.price}</span>
+                          <span className="packages-showcase-tests">{testCount} tests</span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="packages-cta">
+            <Link to="/packages" className="btn btn-primary btn-lg">
+              Explore all packages
+              <ArrowUpRight size={18} strokeWidth={2.5} />
+            </Link>
           </div>
         </div>
       </ScrollReveal>
@@ -868,35 +912,73 @@ export default function Home() {
         </div>
       </ScrollReveal>
 
-      {/* Popular Packages — Full Body Checkups */}
-      <ScrollReveal as="section" className="section section-packages">
-        <div className="packages-glow" aria-hidden="true" />
-        <div className="container packages-inner">
-          <header className="packages-header">
-            <div className="packages-header-copy">
-              <span className="packages-eyebrow">FULL BODY CHECKUPS</span>
-              <h2 className="packages-title">
-                Packages that <em>say a lot</em>,
-                <br />
-                for a little.
+      {/* Popular Tests — Most Booked */}
+      <ScrollReveal as="section" className="section section-popular-tests">
+        <div className="popular-tests-glow" aria-hidden="true" />
+        <div className="container popular-tests-inner">
+          <header className="popular-tests-header">
+            <div className="popular-tests-header-copy">
+              <span className="popular-tests-eyebrow">MOST BOOKED</span>
+              <h2 className="popular-tests-title">
+                Popular <em>tests</em>, ready to book.
               </h2>
             </div>
-            <p className="packages-lede">
-              Physician-curated bundles that screen you head-to-toe. Save up to 82% versus individual tests, with the same NABL quality.
-            </p>
+            <div className="popular-tests-header-actions">
+              <Link to="/tests" className="btn btn-primary">
+                View all tests
+                <ArrowUpRight size={15} strokeWidth={2.75} />
+              </Link>
+            </div>
           </header>
 
-          <div className="packages-grid">
-            {popularPackages.slice(0, 4).map((pkg) => (
-              <PackageCard key={pkg._id} pkg={pkg} variant="featured" />
-            ))}
-          </div>
+          <div
+            className="popular-tests-carousel"
+            onMouseEnter={() => setPopularPaused(true)}
+            onMouseLeave={() => setPopularPaused(false)}
+            onFocusCapture={() => setPopularPaused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setPopularPaused(false);
+              }
+            }}
+          >
+            <div className="popular-tests-track" ref={popularTrackRef}>
+              {popularLoopSlides.map((slide, index) => (
+                <div
+                  key={slide.key}
+                  className={`popular-tests-slide${index === popularLoopIdx ? ' is-active' : ''}`}
+                  data-popular-loop={index}
+                >
+                  <TestCard
+                    test={slide.test}
+                    variant="carousel"
+                    active={index === popularLoopIdx}
+                    onActivate={() => focusPopularSlide(slide.realIndex)}
+                  />
+                </div>
+              ))}
+            </div>
 
-          <div className="packages-cta">
-            <Link to="/packages" className="btn btn-primary btn-lg">
-              Explore all packages
-              <ArrowUpRight size={18} strokeWidth={2.5} />
-            </Link>
+            {popularCount > 1 && (
+              <div className="popular-tests-nav" aria-label="Browse popular tests">
+                <button
+                  type="button"
+                  className="popular-tests-arrow"
+                  aria-label="Previous popular test"
+                  onClick={() => stepPopularCarousel(-1)}
+                >
+                  <ArrowLeft size={16} strokeWidth={2.25} />
+                </button>
+                <button
+                  type="button"
+                  className="popular-tests-arrow is-next"
+                  aria-label="Next popular test"
+                  onClick={() => stepPopularCarousel(1)}
+                >
+                  <ArrowRight size={16} strokeWidth={2.25} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </ScrollReveal>

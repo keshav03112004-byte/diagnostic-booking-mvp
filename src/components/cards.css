@@ -582,7 +582,232 @@
 
 
 
-/* Featured package cards — image header + content body */
+/* Clinic-style listing cards (Packages / Tests / Disease pages) */
+.clinic-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 1rem;
+  overflow: visible;
+  box-shadow: 0 8px 22px rgba(10, 24, 58, 0.07);
+  border: 1px solid rgba(10, 24, 58, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.clinic-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(10, 24, 58, 0.11);
+}
+
+.clinic-card-media {
+  position: relative;
+  height: 132px;
+  overflow: hidden;
+  border-radius: 1rem 1rem 0 0;
+  background: #e8f2f0;
+}
+
+.clinic-card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.01);
+  transition: transform 0.45s ease;
+}
+
+.clinic-card:hover .clinic-card-img {
+  transform: scale(1.06);
+}
+
+.clinic-card-badge {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--primary-dark);
+  border: 1px solid rgba(var(--primary-rgb), 0.28);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.clinic-card-icon {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -1.35rem auto 0;
+  border-radius: 9999px;
+  background: var(--secondary);
+  color: #fff;
+  border: 2.5px solid #fff;
+  box-shadow: 0 6px 16px rgba(10, 24, 58, 0.16);
+}
+
+.clinic-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  padding: 0.65rem 0.95rem 1.05rem;
+}
+
+.clinic-card-title {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clinic-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.clinic-card-title a:hover {
+  color: var(--primary-dark);
+}
+
+.clinic-card-title a:hover .pkg-title-accent {
+  color: #06101f;
+}
+
+.pkg-title-accent {
+  font-style: normal;
+  font-weight: 800;
+  color: var(--secondary);
+  background: none;
+  padding: 0;
+}
+
+.clinic-card-desc {
+  margin: 0;
+  max-width: 26ch;
+  color: #6b7c8f;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clinic-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35rem 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.clinic-card-price {
+  color: var(--secondary);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.clinic-card-strike {
+  color: #94a3b8;
+  font-size: 0.76rem;
+  text-decoration: line-through;
+}
+
+.clinic-card-tests {
+  color: #7b8a99;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.clinic-card-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.35rem;
+  min-height: 2.1rem;
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid #d5dee8;
+  background: #fff;
+  color: var(--secondary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.clinic-card-cta:hover {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  background: var(--primary-light);
+}
+
+.clinic-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  width: 100%;
+}
+
+.clinic-card-actions .clinic-card-cta {
+  margin-top: 0;
+}
+
+.clinic-card-book {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 2.1rem;
+  padding: 0.35rem 0.95rem;
+  border: none;
+  border-radius: 9999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.clinic-card-book:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .clinic-card-media {
+    height: 120px;
+  }
+
+  .clinic-card-body {
+    padding: 0.55rem 0.85rem 0.95rem;
+  }
+}
+
+/* Legacy premium package card styles kept for any residual usage */
 .section-packages .premium-package-card,
 .premium-package-card {
   position: relative;

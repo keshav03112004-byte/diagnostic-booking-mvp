@@ -13,10 +13,10 @@ exports.getPackages = async (req, res) => {
     ];
   }
 
-  let sortOption = { name: 1 };
+  let sortOption = { sortOrder: 1, name: 1 };
   if (sort === 'price_asc') sortOption = { price: 1 };
   if (sort === 'price_desc') sortOption = { price: -1 };
-  if (sort === 'popular') sortOption = { isPopular: -1, name: 1 };
+  if (sort === 'popular') sortOption = { isPopular: -1, sortOrder: 1, name: 1 };
 
   const packages = await Package.find(filter).populate('tests', 'name slug price').sort(sortOption);
   return res.json({ packages, count: packages.length });
@@ -34,7 +34,7 @@ exports.getPackageBySlug = async (req, res) => {
 exports.getPopularPackages = async (req, res) => {
   const packages = await Package.find({ isActive: true, isPopular: true })
     .populate('tests', 'name')
-    .sort({ name: 1 })
+    .sort({ sortOrder: 1, name: 1 })
     .limit(8);
   return res.json({ packages });
 };

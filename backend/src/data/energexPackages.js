@@ -31,6 +31,7 @@ const packages = [
   {
     name: 'EnergeX Basic Health Checkup',
     slug: 'energex-basic-health-checkup',
+    sortOrder: 1,
     price: 799,
     originalPrice: 1999,
     description:
@@ -76,6 +77,7 @@ const packages = [
   {
     name: 'EnergeX Advance Full Body Checkup',
     slug: 'energex-advance-full-body-checkup',
+    sortOrder: 2,
     price: 1199,
     originalPrice: 4200,
     description:
@@ -158,6 +160,7 @@ const packages = [
   {
     name: 'EnergeX Heart Care Plan',
     slug: 'energex-heart-care-plan',
+    sortOrder: 3,
     price: 1999,
     originalPrice: 4999,
     description:
@@ -250,6 +253,7 @@ const packages = [
   {
     name: 'EnergeX Senior Citizen Plan',
     slug: 'energex-senior-citizen-plan',
+    sortOrder: 4,
     price: 2399,
     originalPrice: seniorMale?.originalPrice || 3239,
     description:
@@ -281,6 +285,7 @@ const packages = [
   {
     name: 'EnergeX Female Care Plan',
     slug: 'energex-female-care-plan',
+    sortOrder: 5,
     price: aarogyamFemale?.price || 2755,
     originalPrice: aarogyamFemale?.originalPrice || 3857,
     description:
@@ -312,6 +317,7 @@ const packages = [
   {
     name: 'EnergeX Male Care Plan',
     slug: 'energex-male-care-plan',
+    sortOrder: 6,
     price: aarogyamMale?.price || 2545,
     originalPrice: aarogyamMale?.originalPrice || 3563,
     description:
@@ -342,6 +348,7 @@ const packages = [
   {
     name: 'EnergeX Cancer Screening Male',
     slug: 'energex-cancer-screening-male',
+    sortOrder: 7,
     price: 699,
     originalPrice: 2330,
     description:
@@ -385,6 +392,7 @@ const packages = [
   {
     name: 'EnergeX Cancer Screening Female',
     slug: 'energex-cancer-screening-female',
+    sortOrder: 8,
     price: 699,
     originalPrice: 2330,
     description:
