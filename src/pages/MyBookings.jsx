@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { bookingAPI } from '../api/api';
 import { useAuth } from '../context/AuthContext';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 import './QuickBook.css';
 
 const STATUS_LABELS = {
@@ -31,10 +33,18 @@ export default function MyBookings() {
       .finally(() => setLoading(false));
   }, [isAuthenticated, authLoading, navigate]);
 
-  if (authLoading || loading) return <div className="loading">Loading bookings...</div>;
+  if (authLoading || loading) {
+    return (
+      <>
+        <Seo {...pageSeo.myBookings} />
+        <div className="loading">Loading bookings...</div>
+      </>
+    );
+  }
 
   return (
     <>
+      <Seo {...pageSeo.myBookings} />
       <div className="page-header">
         <div className="container">
           <h1>My Bookings</h1>

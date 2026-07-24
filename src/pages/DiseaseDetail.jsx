@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { diseaseAPI } from '../api/api';
 import TestCard from '../components/TestCard';
 import PackageCard from '../components/PackageCard';
+import Seo from '../components/Seo';
+import { breadcrumbJsonLd, truncateMeta } from '../config/seo';
+import { siteConfig } from '../config/siteConfig';
 import '../components/cards.css';
 
 export default function DiseaseDetail() {
@@ -17,13 +20,44 @@ export default function DiseaseDetail() {
       .finally(() => setLoading(false));
   }, [slug]);
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (!data) return <div className="empty-state">Category not found</div>;
+  if (loading) {
+    return (
+      <>
+        <Seo title="Loading concern" path={`/disease/${slug}`} noindex />
+        <div className="loading">Loading...</div>
+      </>
+    );
+  }
+
+  if (!data) {
+    return (
+      <>
+        <Seo title="Category not found" path={`/disease/${slug}`} noindex />
+        <div className="empty-state">Category not found</div>
+      </>
+    );
+  }
 
   const { disease, tests, packages } = data;
+  const path = `/disease/${disease.slug}`;
+  const description = truncateMeta(
+    disease.description ||
+      `Browse ${disease.name} related diagnostic tests and health packages from ${siteConfig.name}. Book home collection online.`
+  );
 
   return (
     <>
+      <Seo
+        title={`${disease.name} Tests & Packages`}
+        description={description}
+        path={path}
+        keywords={`${disease.name}, ${disease.name} tests, ${disease.name} checkup, ${siteConfig.name}`}
+        jsonLd={breadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: disease.name, path },
+        ])}
+        jsonLdId="disease-detail"
+      />
       <div className="page-header">
         <div className="container">
           <span style={{ fontSize: '2rem' }}>{disease.icon}</span>

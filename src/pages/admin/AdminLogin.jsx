@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/Logo';
+import Seo from '../../components/Seo';
+import { pageSeo } from '../../config/seo';
 import '../Auth.css';
 import './adminExtras.css';
 
@@ -37,7 +39,9 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="auth-page admin-login-page">
+    <>
+      <Seo {...pageSeo.admin} title="Admin Login" />
+      <div className="auth-page admin-login-page">
       <div className="auth-card card">
         <div className="admin-login-logo">
           <Logo height={56} />
@@ -81,5 +85,6 @@ export default function AdminLogin() {
         </p>
       </div>
     </div>
+    </>
   );
 }

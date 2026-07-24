@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { testAPI } from '../api/api';
 import BookingSidebar from '../components/BookingSidebar';
 import FAQAccordion from '../components/FAQAccordion';
+import Seo from '../components/Seo';
+import { breadcrumbJsonLd, productJsonLd, truncateMeta } from '../config/seo';
+import { siteConfig } from '../config/siteConfig';
 import './Detail.css';
 
 export default function TestDetail() {
@@ -19,21 +22,58 @@ export default function TestDetail() {
 
   if (loading) {
     return (
-      <div className="loading">
-        <div className="loading-spinner" />
-        Loading test details...
-      </div>
+      <>
+        <Seo title="Loading test" path={`/tests/${slug}`} noindex />
+        <div className="loading">
+          <div className="loading-spinner" />
+          Loading test details...
+        </div>
+      </>
     );
   }
 
-  if (!test) return <div className="empty-state">Test not found</div>;
+  if (!test) {
+    return (
+      <>
+        <Seo title="Test not found" path={`/tests/${slug}`} noindex />
+        <div className="empty-state">Test not found</div>
+      </>
+    );
+  }
 
   const discount = test.originalPrice
     ? Math.round(((test.originalPrice - test.price) / test.originalPrice) * 100)
     : 0;
+  const path = `/tests/${test.slug}`;
+  const description = truncateMeta(
+    test.description ||
+      `Book ${test.name} online with ${siteConfig.name}. Home collection available. Report in ${test.reportTatHours || 24} hours. Transparent pricing from ₹${test.price}.`
+  );
 
   return (
     <>
+      <Seo
+        title={`${test.name} — Book Online`}
+        description={description}
+        path={path}
+        type="product"
+        keywords={`${test.name}, book ${test.name}, lab test at home, ${siteConfig.name}`}
+        jsonLd={[
+          breadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Tests', path: '/tests' },
+            { name: test.name, path },
+          ]),
+          productJsonLd({
+            name: test.name,
+            description,
+            price: test.price,
+            path,
+            sku: test.slug,
+          }),
+        ]}
+        jsonLdId="test-detail"
+      />
       <div className="page-header">
         <div className="container">
           <nav className="detail-breadcrumb">

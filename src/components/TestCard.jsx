@@ -257,7 +257,7 @@ export default function TestCard({ test, variant = 'default', active = false, on
             aria-label={`Book ${displayName} on WhatsApp`}
           >
             <Zap size={14} strokeWidth={2.4} fill="currentColor" />
-            Book
+            Book now
           </button>
         </div>
       </div>

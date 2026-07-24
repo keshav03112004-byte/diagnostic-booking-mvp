@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { packageAPI, diseaseAPI } from '../api/api';
 import PackageCard from '../components/PackageCard';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 import '../components/cards.css';
 
 export default function Packages() {
@@ -44,6 +46,7 @@ export default function Packages() {
 
   return (
     <>
+      <Seo {...pageSeo.packages} />
       <div className="page-header">
         <div className="container">
           <h1>Health Checkup Packages</h1>
@@ -88,7 +91,7 @@ export default function Packages() {
         ) : packages.length === 0 ? (
           <div className="empty-state">No packages found.</div>
         ) : (
-          <div className="card-grid">
+          <div className="card-grid packages-card-grid">
             {packages.map((pkg) => (
               <PackageCard key={pkg._id} pkg={pkg} />
             ))}

@@ -15,7 +15,10 @@ import {
 import { packageAPI } from '../api/api';
 import BookingSidebar from '../components/BookingSidebar';
 import FAQAccordion from '../components/FAQAccordion';
-import PackageCard from '../components/PackageCard';
+import PackageCard, { getPackageImage } from '../components/PackageCard';
+import Seo from '../components/Seo';
+import { breadcrumbJsonLd, productJsonLd, truncateMeta } from '../config/seo';
+import { siteConfig } from '../config/siteConfig';
 import './Detail.css';
 import '../components/cards.css';
 
@@ -80,24 +83,30 @@ export default function PackageDetail() {
 
   if (loading) {
     return (
-      <div className="loading">
-        <div className="loading-spinner" />
-        Loading package details...
-      </div>
+      <>
+        <Seo title="Loading package" path={`/packages/${slug}`} noindex />
+        <div className="loading">
+          <div className="loading-spinner" />
+          Loading package details...
+        </div>
+      </>
     );
   }
 
   if (!pkg) {
     return (
-      <div className="container section">
-        <div className="empty-state package-detail-empty">
-          <h2>Package not found</h2>
-          <p>{error || 'This health package may have been removed or the link is incorrect.'}</p>
-          <Link to="/packages" className="btn btn-primary">
-            Browse all packages
-          </Link>
+      <>
+        <Seo title="Package not found" path={`/packages/${slug}`} noindex />
+        <div className="container section">
+          <div className="empty-state package-detail-empty">
+            <h2>Package not found</h2>
+            <p>{error || 'This health package may have been removed or the link is incorrect.'}</p>
+            <Link to="/packages" className="btn btn-primary">
+              Browse all packages
+            </Link>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -111,9 +120,39 @@ export default function PackageDetail() {
   const testCount = pkg.totalTestsCount || pkg.tests?.length || pkg.includedTestNames?.length || 0;
   const hasCategories = pkg.testCategories?.length > 0;
   const hasLinkedTests = pkg.tests?.length > 0;
+  const path = `/packages/${pkg.slug}`;
+  const description = truncateMeta(
+    pkg.description ||
+      `Book ${pkg.name} with ${siteConfig.name}. ${testCount} tests included. Home collection and smart reports from ₹${pkg.price}.`
+  );
+  const ogImage = getPackageImage(pkg).src;
 
   return (
     <>
+      <Seo
+        title={`${pkg.name} — Health Package`}
+        description={description}
+        path={path}
+        image={ogImage}
+        type="product"
+        keywords={`${pkg.name}, health checkup package, full body checkup, ${siteConfig.name}`}
+        jsonLd={[
+          breadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Packages', path: '/packages' },
+            { name: pkg.name, path },
+          ]),
+          productJsonLd({
+            name: pkg.name,
+            description,
+            price: pkg.price,
+            path,
+            image: ogImage,
+            sku: pkg.slug,
+          }),
+        ]}
+        jsonLdId="package-detail"
+      />
       <div className="page-header package-detail-header">
         <div className="container">
           <nav className="detail-breadcrumb" aria-label="Breadcrumb">

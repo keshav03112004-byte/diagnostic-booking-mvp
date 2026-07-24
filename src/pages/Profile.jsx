@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../api/api';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 import './QuickBook.css';
 
 export default function Profile() {
@@ -35,7 +37,14 @@ export default function Profile() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) {
+    return (
+      <>
+        <Seo {...pageSeo.profile} />
+        <div className="loading">Loading...</div>
+      </>
+    );
+  }
   if (!isAuthenticated) {
     navigate('/');
     return null;
@@ -76,6 +85,7 @@ export default function Profile() {
 
   return (
     <>
+      <Seo {...pageSeo.profile} />
       <div className="page-header">
         <div className="container">
           <h1>My Profile</h1>

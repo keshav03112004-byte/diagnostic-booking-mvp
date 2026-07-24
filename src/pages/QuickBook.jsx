@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getWhatsAppUrl, getBookingWhatsAppMessage } from '../utils/whatsapp';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 
 /** Quick Book route opens WhatsApp — no on-site booking form. */
 export default function QuickBook() {
@@ -20,8 +22,11 @@ export default function QuickBook() {
   }, [navigate, searchParams]);
 
   return (
-    <div className="loading">
-      Opening WhatsApp to book...
-    </div>
+    <>
+      <Seo {...pageSeo.quickBook} />
+      <div className="loading">
+        Opening WhatsApp to book...
+      </div>
+    </>
   );
 }

@@ -7,7 +7,9 @@ import {
   User,
   Activity,
   Ribbon,
+  Zap,
 } from 'lucide-react';
+import { openWhatsApp, getBookingWhatsAppMessage } from '../utils/whatsapp';
 
 const PACKAGE_THUMBNAILS = {
   'energex-basic-health-checkup': {
@@ -113,6 +115,12 @@ export default function PackageCard({ pkg }) {
       ? `${pkg.description.slice(0, 107).trim()}…`
       : pkg.description || `${testCount} tests included`;
 
+  const handleBook = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openWhatsApp(getBookingWhatsAppMessage(pkg, 'package'));
+  };
+
   return (
     <article className="clinic-card">
       <div className="clinic-card-media">
@@ -143,9 +151,15 @@ export default function PackageCard({ pkg }) {
           ) : null}
           <span className="clinic-card-tests">{testCount} tests</span>
         </div>
-        <Link to={detailPath} className="clinic-card-cta">
-          Learn More
-        </Link>
+        <button
+          type="button"
+          className="clinic-card-cta is-highlighted"
+          onClick={handleBook}
+          aria-label={`Book ${pkg.name} on WhatsApp`}
+        >
+          <Zap size={14} strokeWidth={2.4} fill="currentColor" />
+          Book now
+        </button>
       </div>
     </article>
   );

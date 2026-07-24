@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import BookingForm from '../components/BookingForm';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 import './QuickBook.css';
 
 export default function Checkout() {
@@ -18,7 +20,9 @@ export default function Checkout() {
 
   if (success) {
     return (
-      <div className="container section">
+      <>
+        <Seo {...pageSeo.checkout} title="Booking Confirmed" />
+        <div className="container section">
         <div className="success-card card">
           <div className="success-icon">✓</div>
           <h1>Booking Confirmed!</h1>
@@ -31,26 +35,31 @@ export default function Checkout() {
             </button>
           </div>
         </div>
-      </div>
+        </div>
+      </>
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="container section">
-        <div className="empty-state card">
-          <h2>Your cart is empty</h2>
-          <p>Add tests or packages to proceed with booking.</p>
-          <Link to="/tests" className="btn btn-primary" style={{ marginTop: '1rem' }}>
-            Browse Tests
-          </Link>
+      <>
+        <Seo {...pageSeo.checkout} />
+        <div className="container section">
+          <div className="empty-state card">
+            <h2>Your cart is empty</h2>
+            <p>Add tests or packages to proceed with booking.</p>
+            <Link to="/tests" className="btn btn-primary" style={{ marginTop: '1rem' }}>
+              Browse Tests
+            </Link>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
     <>
+      <Seo {...pageSeo.checkout} />
       <div className="page-header">
         <div className="container">
           <h1>Checkout</h1>

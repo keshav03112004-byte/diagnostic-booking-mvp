@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { testAPI, diseaseAPI } from '../api/api';
 import TestCard from '../components/TestCard';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 import '../components/cards.css';
 
 export default function Tests() {
@@ -47,6 +49,7 @@ export default function Tests() {
 
   return (
     <>
+      <Seo {...pageSeo.tests} />
       <div className="page-header">
         <div className="container">
           <h1>All Diagnostic Tests</h1>

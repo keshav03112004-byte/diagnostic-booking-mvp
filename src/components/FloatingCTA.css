@@ -1,57 +1,27 @@
 .floating-cta {
   position: fixed;
-  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
-  right: calc(1.5rem + env(safe-area-inset-right, 0px));
+  right: 1.25rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   z-index: 90;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
   align-items: flex-end;
+  gap: 0.65rem;
 }
 
 .floating-cta .floating-btn {
-  box-shadow: 0 10px 28px rgba(var(--secondary-rgb), 0.22);
-}
-
-.floating-cta .floating-btn-whatsapp {
-  background: #25D366;
-  border-color: #25D366;
-  color: #fff;
-}
-
-.floating-cta .floating-btn-whatsapp .whatsapp-icon {
-  flex-shrink: 0;
-  display: block;
-}
-
-.floating-cta .floating-btn-whatsapp:hover {
-  background: #1ebe57;
-  border-color: #1ebe57;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.35);
-}
-
-.floating-cta .btn-secondary-light {
-  background: rgba(var(--secondary-rgb), 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.floating-cta .btn-secondary-light:hover {
-  background: rgba(var(--secondary-rgb), 0.92);
+  box-shadow: 0 10px 28px rgba(10, 24, 58, 0.22);
 }
 
 @media (max-width: 768px) {
   .floating-cta {
+    right: 1rem;
     bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    right: calc(1rem + env(safe-area-inset-right, 0px));
   }
-}
 
-@media (max-width: 480px) {
   .floating-cta .floating-btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
+    min-height: 2.75rem;
+    padding-inline: 1.1rem;
+    font-size: 0.9rem;
   }
 }

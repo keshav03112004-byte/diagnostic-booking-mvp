@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { inquiryAPI } from '../api/api';
+import Seo from '../components/Seo';
+import { pageSeo } from '../config/seo';
 import './Contact.css';
 
 export default function Contact() {
@@ -34,6 +36,7 @@ export default function Contact() {
 
   return (
     <>
+      <Seo {...pageSeo.contact} />
       <div className="page-header">
         <div className="container">
           <h1>Contact Us</h1>

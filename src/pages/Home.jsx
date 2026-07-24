@@ -11,6 +11,8 @@ import FAQAccordion from '../components/FAQAccordion';
 import ScrollReveal from '../components/ScrollReveal';
 import WhatsAppIcon from '../components/WhatsAppIcon';
 import { siteConfig, heroStats, heroTags } from '../config/siteConfig';
+import { pageSeo, organizationJsonLd, websiteJsonLd } from '../config/seo';
+import Seo from '../components/Seo';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 import {
   Activity,
@@ -558,6 +560,15 @@ export default function Home() {
 
   return (
     <>
+      <Seo
+        title={pageSeo.home.title}
+        description={pageSeo.home.description}
+        path={pageSeo.home.path}
+        keywords={pageSeo.home.keywords}
+        absoluteTitle
+        jsonLd={[organizationJsonLd(), websiteJsonLd()]}
+        jsonLdId="home"
+      />
       <section className="hero hero-split-section">
         <div className="hero-split-bg" aria-hidden="true" />
         <div className="container hero-split-inner">
