@@ -151,15 +151,20 @@ export default function PackageCard({ pkg }) {
           ) : null}
           <span className="clinic-card-tests">{testCount} tests</span>
         </div>
-        <button
-          type="button"
-          className="clinic-card-cta is-highlighted"
-          onClick={handleBook}
-          aria-label={`Book ${pkg.name} on WhatsApp`}
-        >
-          <Zap size={14} strokeWidth={2.4} fill="currentColor" />
-          Book now
-        </button>
+        <div className="clinic-card-actions">
+          <Link to={detailPath} className="clinic-card-cta">
+            Learn More
+          </Link>
+          <button
+            type="button"
+            className="clinic-card-book"
+            onClick={handleBook}
+            aria-label={`Book ${pkg.name} on WhatsApp`}
+          >
+            <Zap size={14} strokeWidth={2.4} fill="currentColor" />
+            Book now
+          </button>
+        </div>
       </div>
     </article>
   );

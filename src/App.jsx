@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import InquiryModal from './components/InquiryModal';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import BookInquiryRedirect from './pages/BookInquiryRedirect';
 import Tests from './pages/Tests';
@@ -25,11 +26,14 @@ import AdminPackages from './pages/admin/AdminPackages';
 import PackageForm from './pages/admin/PackageForm';
 
 function PublicApp() {
+  const location = useLocation();
+
   return (
     <div className="app">
+      <ScrollToTop />
       <Navbar />
       <main className="main-content">
-        <Routes>
+        <Routes location={location} key={`${location.pathname}${location.search}`}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<BookInquiryRedirect />} />
           <Route path="/register" element={<BookInquiryRedirect />} />

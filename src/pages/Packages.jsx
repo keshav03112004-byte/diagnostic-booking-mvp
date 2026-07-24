@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { packageAPI, diseaseAPI } from '../api/api';
 import PackageCard from '../components/PackageCard';
@@ -49,6 +49,11 @@ export default function Packages() {
       <Seo {...pageSeo.packages} />
       <div className="page-header">
         <div className="container">
+          <nav className="page-breadcrumb" aria-label="Breadcrumb">
+            <Link to="/">Home</Link>
+            <span>/</span>
+            <span>Packages</span>
+          </nav>
           <h1>Health Checkup Packages</h1>
           <p>Curated packages with multiple tests at discounted prices</p>
         </div>

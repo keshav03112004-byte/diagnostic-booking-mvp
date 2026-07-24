@@ -783,7 +783,7 @@
   box-shadow: 0 10px 22px rgba(var(--primary-rgb), 0.4);
 }
 
-.packages-card-grid .clinic-card-cta.is-highlighted {
+.packages-card-grid .clinic-card-book {
   animation: clinic-cta-pulse 1.6s ease-out 1;
 }
 
@@ -797,13 +797,13 @@
     transform: scale(1.04);
   }
   100% {
-    box-shadow: 0 8px 18px rgba(var(--primary-rgb), 0.32);
+    box-shadow: 0 6px 14px rgba(var(--primary-rgb), 0.2);
     transform: scale(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .packages-card-grid .clinic-card-cta.is-highlighted {
+  .packages-card-grid .clinic-card-book {
     animation: none;
   }
 }
